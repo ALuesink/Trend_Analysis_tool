@@ -68,20 +68,49 @@ def vcf_file(run, path):
         print(repr(e))
     
     
-def picard_files(run, path):
+def runstat_file(run, path):
     try:
-        QCStats_file = commands.getoutput("find " + str(path) + str(run) + "/QCStats/ -iname \"HSMetrics_summary.transposed.txt\"")
+        sample_dup = {}        
         runstats_file = commands.getoutput("find " + str(path) + str(run) + "/ -iname \"run_stats.txt\"")
         
         with open(runstats_file, "r") as runstats:
             run_stats = runstats.read()
-            if 
+            run_stats = run_stats.split("working") 
+            
+            for sample in run_stats[1:]:
+                stats = sample.split("\n")
+                
+                sample_name = stats[0].split("/")[-1]
+                sample_name = sample_name.replace("_dedup.flagstat...", "")
         
+                dup = stats[15]
+                dup = dup.split("%")[0].strip("\t").strip()
+                dup = float("{0:.2f}".format(dup))
+                
+                sample_dup[sample_name] = dup
+                
+        return sample_dup
         
+    except Exception, e:
+        print(repr(e))
         
-        
-        
-        
+def HSMetrics(run, path):
+    try:
+        sample_stats = {}        
+        QCStats_file = commands.getoutput("find " + str(path) + str(run) + "/QCStats/ -iname \"HSMetrics_summary.transposed.txt\"")
+
+        with open(QCStats_file, "r") as QCStats:
+            sample
+            qc_stats = QCStats.read().split("\n")
+            for line in qc_stats:
+                l = line.split("\t")[:-1]
+                sample.append(l)
+            
+            qc_table = [list(i) for i in map(None,*sample)]
+            qc_table[0][0] = "Sample"
+            
+            for stat in qc_table[1:]:
+                stat
         
         
     
