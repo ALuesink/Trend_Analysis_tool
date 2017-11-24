@@ -8,7 +8,7 @@ import warnings
 
 import database
 
-def to_database(run, path):
+def up_to_database(run, path):
     with warnings.catch_warnings():
         warnings.simplefilter("error")
 

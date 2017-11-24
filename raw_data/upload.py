@@ -11,7 +11,7 @@ import warnings
 
 import database
 
-def to_database(run, path, sequencer):
+def up_to_database(run, path, sequencer):
     """Get data of inserted run and upload the data to the database"""
     with warnings.catch_warnings():
         warnings.simplefilter("error")
