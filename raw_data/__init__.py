@@ -1,3 +1,4 @@
 """Upload functions."""
 
-import upload.py
+import upload
+import delete
