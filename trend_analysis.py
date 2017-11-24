@@ -24,6 +24,10 @@ def del_processed_data(args):
     """Delete processed run data from the database"""
     processed_data.delete.del_from_database(args.run)
 
+# Update functions
+def update_run_data(args):
+    """Update the Run data by first delete all data and then upload the new data"""
+    raw_data.update.up_Run_in_database(args.run, args.path, args.sequencer)
 
 
 if __name__ == "__main__":
@@ -46,6 +50,11 @@ if __name__ == "__main__":
     parser_raw_delete.add_argument('run', help='Run name')
     parser_raw_delete.set_defaults(func=del_run_data)
 
+    parser_raw_update = subparser_raw.add_parser('update', help='delete all run data and upload new run data to database')    
+    parser_raw_update.add_argument('run', help='Run name')
+    parser_raw_update.add_argument('path', help='Path to run')
+    parser_raw_update.add_argument('sequencer', help='Sequencer name')
+    parser_raw_update.set_defaults(func=update_run_data)
     
     # processed data
     parser_processed = subparser.add_parser('processed_data', help='Processed data functions')

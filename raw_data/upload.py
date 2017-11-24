@@ -2,26 +2,24 @@
 """Upload raw data function"""
 
 from sqlalchemy import create_engine, Table, MetaData
-from datetime import datetime
-from html_table_parser import HTMLTableParser
-from utils import convert_numbers
-import commands
 import config
 import warnings
 
 import database
+import data
 
 def up_to_database(run, path, sequencer):
     """Get data of inserted run and upload the data to the database"""
     with warnings.catch_warnings():
         warnings.simplefilter("error")
-        runs_db = database.get.Runs()
-        if run in runs_db:
-            print("This run is already in the database")
-        else:
-            try:
-                run_stats, lane_stats = laneHTML(run,path)
-                sample_stats = laneBarcodeHTML(run, path)
+        
+        try:        
+            runs_db = database.get.Runs()
+            if run in runs_db:
+                print("This run is already in the database")
+            else:
+                run_stats, lane_stats = data.import_data.laneHTML(run,path)
+                sample_stats = data.import_data.laneBarcodeHTML(run, path)
                 
                 metadata = MetaData()
                 engine = engine = create_engine("mysql+pymysql://"+config.MySQL_DB["username"]+":"+config.MySQL_DB["password"]+"@"+config.MySQL_DB["host"]+"/"+config.MySQL_DB["database"], echo=False)
@@ -55,80 +53,6 @@ def up_to_database(run, path, sequencer):
                     conn.execute(insert_Sample)
                 
                 conn.close()
-            except Exception, e:
-                print(repr(e))
-
-def laneHTML(run, path):
-    
-    try:    
-        stats_lane = []
-        stats_run = []
-        epoch = datetime.utcfromtimestamp(0)
-        
-        date = run.split("_")[0]
-        date = "20" + date[0:2] + "-" + date[2:4] + "-" + date[4:6]
-        d = datetime.strptime(date, "%Y-%m-%d")
-        as_date = (d-epoch).days
-
-        lanehtml = commands.getoutput("find "+ str(path) + str(run) +"/Data/Intensities/BaseCalls/Reports/html/*/all/all/all/ -iname \"lane.html\"")
-
-        with open(lanehtml, "r") as lane:
-            html = lane.read()
-            tableParser = HTMLTableParser()
-            tableParser.feed(html)
-            tables = tableParser.tables                         #tables[1]==run tables[2]==lane
-            
-            stats_run = tables[1][1]
-            stats_run = [convert_numbers(item.replace(",", "")) for item in stats_run]
-            PCT_PF = (float(stats_run[1])/stats_run[0])*100
-            PCT_PF = float("{0:.2f}".format(PCT_PF))
-            stats_run.extend([date,as_date,PCT_PF])                
-            
-            for lane in tables[2][1:]:
-                lane = [convert_numbers(item.replace(",", "")) for item in lane]
-                stats_lane.append(lane)
-        
-        return stats_run, stats_lane
-    except Exception, e:
-        print(repr(e))
-
-def laneBarcodeHTML(run, path):
-    try:
-        stats_sample = []
-
-        samplehtml = commands.getoutput("find " + str(path) + str(run) + "/Data/Intensities/BaseCalls/Reports/html/*/all/all/all/ -iname \"laneBarcode.html\"")
-
-        with open(samplehtml, "r") as sample:
-            html = sample.read()
-            tableParser = HTMLTableParser()
-            tableParser.feed(html)
-            tables = tableParser.tables                         #tables[1]==run tables[2]==sample
-            
-            for sample_lane in tables[2][1:]:
-                if sample_lane[1].upper() != "DEFAULT":
-                    stats_sample_lane = [convert_numbers(item.replace(",","")) for item in sample_lane]
-                    stats_sample.append(stats_sample_lane)
-        
-        return stats_sample
-
-    except Exception, e:
-        print(repr(e))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        except Exception, e:
+            print(repr(e))
 

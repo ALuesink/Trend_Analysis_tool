@@ -33,6 +33,7 @@ def del_from_database(run):
             conn.execute(del_Run)
             conn.execute(del_Run_per_Lane)
             conn.execute(del_Sample_Sequencer)
+            conn.execute(del_Sample_Processed)            
             
             conn.close()
         
