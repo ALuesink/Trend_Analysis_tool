@@ -88,4 +88,5 @@ if __name__ == "__main__":
     parser_processed_delete.add_argument('run', help='Run name')
 #    parser_processed_delete.set_defaults(func=del_processed_data)
     
-    
+    args = parser.parse_args()
+    args.func(args) 
