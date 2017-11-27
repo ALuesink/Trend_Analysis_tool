@@ -4,30 +4,49 @@ import argparse
 
 import raw_data
 import processed_data
+import upload
+import delete
 
-
-# Upload functions
+#Upload functions
 def upload_raw_data(args):
-    """Upload Raw data to the database"""
-    raw_data.upload.up_to_database(args.run, args.path, args.sequencer)
+    upload.raw_data.up_to_database(args.run, args.path, args.sequencer)
 
 def upload_processed_data(args):
-    """Upload Processed data to the database"""
-    processed_data.upload.up_to_database(args.run, args.path)
+    upload.processed_data.up_to_database(args.run, args.path)
     
-# Delete functions
-def del_run_data(args):
-    """Delete all run data from the database"""
-    raw_data.delete.del_from_database(args.run)
+#Delete frunctions
+def delete_run_all_data(args):
+    delete.run_all.del_all_rundata(args.run)
 
-def del_processed_data(args):
-    """Delete processed run data from the database"""
-    processed_data.delete.del_from_database(args.run)
+def delete_run_rawdata(args):
+    delete.run_rawdata.del_run_rawdata(args.run)
+    
+def delete_sample_data(args):
+    delete.sample_processed.del_sampledata(args.run, args.sample)
 
-# Update functions
-def update_run_data(args):
-    """Update the Run data by first delete all data and then upload the new data"""
-    raw_data.update.up_Run_in_database(args.run, args.path, args.sequencer)
+
+## Upload functions
+#def upload_raw_data(args):
+#    """Upload Raw data to the database"""
+#    raw_data.upload.up_to_database(args.run, args.path, args.sequencer)
+#
+#def upload_processed_data(args):
+#    """Upload Processed data to the database"""
+#    processed_data.upload.up_to_database(args.run, args.path)
+#    
+## Delete functions
+#def del_run_data(args):
+#    """Delete all run data from the database"""
+#    raw_data.delete.del_from_database(args.run)
+#
+#def del_processed_data(args):
+#    """Delete processed run data from the database"""
+#    processed_data.delete.del_from_database(args.run)
+#
+## Update functions
+#def update_run_data(args):
+#    """Update the Run data by first delete all data and then upload the new data"""
+#    raw_data.update.up_Run_in_database(args.run, args.path, args.sequencer)
 
 
 if __name__ == "__main__":

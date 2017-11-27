@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Delete processed data"""
+"""Delete sample processed data"""
 
 from sqlalchemy import create_engine, Table, MetaData
 import warnings
