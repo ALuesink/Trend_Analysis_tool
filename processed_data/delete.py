@@ -13,7 +13,7 @@ def del_from_database(run):
         
         try:
             metadata = MetaData()
-            engine = engine = create_engine("mysql+pymysql://"+config.MySQL_DB["username"]+":"+config.MySQL_DB["password"]+"@"+config.MySQL_DB["host"]+"/"+config.MySQL_DB["database"], echo=False)
+            engine = create_engine("mysql+pymysql://"+config.MySQL_DB["username"]+":"+config.MySQL_DB["password"]+"@"+config.MySQL_DB["host"]+"/"+config.MySQL_DB["database"], echo=False)
             
             Sample_Processed = Table("Sample_Processed", metadata, autoload=True, autoload_with=engine)
             

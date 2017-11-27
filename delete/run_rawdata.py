@@ -7,13 +7,13 @@ import config
 
 import database
 
-def del_from_database(run):
+def del_run_rawdata(run):
     with warnings.catch_warnings():
         warnings.simplefilter("error")
         
         try:
             metadata = MetaData()
-            engine = engine = create_engine("mysql+pymysql://"+config.MySQL_DB["username"]+":"+config.MySQL_DB["password"]+"@"+config.MySQL_DB["host"]+"/"+config.MySQL_DB["database"], echo=False)      
+            engine = create_engine("mysql+pymysql://"+config.MySQL_DB["username"]+":"+config.MySQL_DB["password"]+"@"+config.MySQL_DB["host"]+"/"+config.MySQL_DB["database"], echo=False)      
             
             Run = Table("Run",metadata,autoload=True,autoload_with=engine)
             Run_per_Lane = Table("Run_per_Lane",metadata,autoload=True,autoload_with=engine)
