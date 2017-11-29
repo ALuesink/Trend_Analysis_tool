@@ -73,7 +73,7 @@ def vcf_file(run, path):
             list_samples = vcf_file.samples
             for sample in list_samples:
                 dic_samples[sample] = [0,0,0]
-                list_samples.append(sample)
+#                list_samples.append(sample)
             for variant in vcf_file:
                 samples = []
                 if "DB"in variant.INFO:
@@ -121,10 +121,12 @@ def runstat_file(run, path):
                 
                 sample_name = stats[0].split("/")[-1]
                 sample_name = sample_name.replace("_dedup.flagstat...", "")
-        
-                dup = stats[15]
-                dup = dup.split("%")[0].strip("\t").strip()
-                dup = float("{0:.2f}".format(dup))
+                
+                dup = 0
+                for x in stats:
+                    if "%duplication" in x:
+                        dup = dup.split("%")[0].strip("\t").strip()
+                        dup = float("{0:.2f}".format(dup))
                 
                 sample_dup[sample_name] = dup
                 
