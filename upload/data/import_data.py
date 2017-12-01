@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Import raw data"""
+"""Import run data"""
 
 from datetime import datetime
 from html_table_parser import HTMLTableParser
@@ -7,7 +7,8 @@ from utils import convert_numbers
 import commands
 import vcf
 
-def laneHTML(run, path): 
+def laneHTML(run, path):
+    """Retrieve data from the lane.html page, the data is the general run data and date per lane"""
     try:    
         stats_lane = []
         stats_run = []
@@ -41,6 +42,7 @@ def laneHTML(run, path):
         print(repr(e))
 
 def laneBarcodeHTML(run, path):
+    """Retrieve data from the laneBarcode.html page, the data is per barcode/sample per lane"""
     try:
         stats_sample = []
 
@@ -63,6 +65,7 @@ def laneBarcodeHTML(run, path):
         print(repr(e))
 
 def vcf_file(run, path):
+    """Retrieve data from a vcf file, for each sample the number of variants, homo- and heterozygous, number of dbSNP variants and PASS variants is determained"""
     try:
         dic_samples = {}
         list_samples = []
@@ -108,6 +111,7 @@ def vcf_file(run, path):
     
     
 def runstat_file(run, path):
+    """Retrieve data from the runstats file, for each sample the percentage duplication is retrieved"""
     try:
         sample_dup = {}        
         runstats_file = commands.getoutput("find " + str(path) + str(run) + "/ -iname \"run_stats.txt\"")
@@ -137,6 +141,7 @@ def runstat_file(run, path):
         print(repr(e))
         
 def HSMetrics(run, path):
+    """Retrieve data from the HSMetrics_summary.transposed file, from this file all the data is transferred to a dictionary"""
     try:
         sample_stats = {}        
         QCStats_file = commands.getoutput("find " + str(path) + str(run) + "/QCStats/ -iname \"HSMetrics_summary.transposed.txt\"")
@@ -151,23 +156,88 @@ def HSMetrics(run, path):
             qc_table = [list(i) for i in map(None,*sample)]
             qc_table[0][0] = "Sample"
             
+            table_header = qc_table[0][:-1]
+            table_header = [item.replace(" ", "_") for item in table_header]
+            
+            dict_columns = {
+                'Sample_name':{'column': 'Sample'},
+                'Total_number_of_reads': {'column': 'Total_number_of_reads'},
+                'Percentage_reads_mapped': {'column': 'Percentage_reads_mapped'},
+                'Total_reads': {'column': 'TOTAL_READS'},
+                'PF_reads': {'column': 'PF_READS'},
+                'PF_unique_reads': {'column': 'PF_UNIQUE_READS'},
+                'PCT_PF_reads': {'column': 'PCT_PF_READS'},
+                'PCT_PF_UQ_reads': {'column': 'PCT_PF_UQ_READS'},
+                'PF_UQ_reads_aligned': {'column': 'PF_UQ_READS_ALIGNED'},
+                'PCT_PF_UQ_reads_aligned': {'column': 'PCT_PF_UQ_READS_ALIGNED'},
+                'PF_UQ_bases_aligned': {'column': 'PF_UQ_BASES_ALIGNED'},
+                'On_bait_bases': {'column': 'ON_BAIT_BASES'},
+                'Near_bait_bases': {'column': 'NEAR_BAIT_BASES'},
+                'Off_bait_bases': {'column': 'OFF_BAIT_BASES'},
+                'On_target_bases': {'column': 'ON_TARGET_BASES'},
+                'PCT_selected_bases': {'column': 'PCT_SELECTED_BASES'},
+                'PCT_off_bait': {'column': 'PCT_OFF_BAIT'},
+                'On_bait_vs_selected': {'column': 'ON_BAIT_VS_SELECTED'},
+                'Mean_bait_coverage': {'column': 'MEAN_BAIT_COVERAGE'},
+                'Mean_target_coverage': {'column': 'MEAN_TARGET_COVERAGE'},
+                'PCT_usable_bases_on_bait': {'column': 'PCT_USABLE_BASES_ON_BAIT'},
+                'PCT_usable_bases_on_target': {'column': 'PCT_USABLE_BASES_ON_TARGET'},
+                'Fold_enrichment': {'column': 'FOLD_ENRICHMENT'},
+                'Zero_CVG_targets_PCT': {'column': 'ZERO_CVG_TARGETS_PCT'},
+                'Fold_80_base_penalty': {'column': 'FOLD_80_BASE_PENALTY'},
+                'PCT_target_bases_2X': {'column': 'PCT_TARGET_BASES_2X'},
+                'PCT_target_bases_10X': {'column': 'PCT_TARGET_BASES_10X'},
+                'PCT_target_bases_20X': {'column': 'PCT_TARGET_BASES_20X'},
+                'PCT_target_bases_30X': {'column': 'PCT_TARGET_BASES_30X'},
+                'PCT_target_bases_40X': {'column': 'PCT_TARGET_BASES_40X'},
+                'PCT_target_bases_50X': {'column': 'PCT_TARGET_BASES_50X'},
+                'PCT_target_bases_100X': {'column': 'PCT_TARGET_BASES_100X'},
+                'HS_library_size': {'column': 'HS_LIBRARY_SIZE'},
+                'HS_penalty_10X': {'column': 'HS_PENALTY_10X'},
+                'HS_penalty_20X': {'column': 'HS_PENALTY_20X'},
+                'HS_penalty_30X': {'column': 'HS_PENALTY_30X'},
+                'HS_penalty_40X': {'column': 'HS_PENALTY_40X'},
+                'HS_penalty_50X': {'column': 'HS_PENALTY_50X'},
+                'HS_penalty_100X': {'column': 'HS_PENALTY_100X'},
+                'AT_dropout': {'column': 'AT_DROPOUT'},
+                'GC_dropout': {'column': 'GC_DROPOUT'},
+                'Bait_name': {'column': 'BAIT_SET'},
+                'Genome_Size': {'column': 'GENOME_SIZE'},
+                'Bait_territory': {'column': 'BAIT_TERRITORY'},
+                'Target_territory': {'column': 'TARGET_TERRITORY'},
+                'Bait_design_efficiency': {'column': 'BAIT_DESIGN_EFFICIENCY'}
+            }
+            for col in dict_columns:
+                dict_columns[col]['index'] = table_header.index(dict_columns[col]['column'])
+            
+            
             for stats in qc_table[1:]:
+                data_dict = {}
                 stats = stats[:-1]      #there is a None at the end of each line
-                stats[0] = stats[0].replace("_dedup", "")
-                stats[2] = float(stats[2].strip("%"))
-                index_to_pct = [7,11,12,14,20,21,22,25,26,28,30,31,32,33,34,35,36]
-                for i in index_to_pct:
-                    stats[i] = float(stats[i])*100
-                    stats[i] = float("{0:.2f}".format(stats[i]))
-                    
-                index_format = [23,24,27,29,38,39,40,41,42,43,44,45]
-                for i in index_format:
-                    stats[i] = float("{0:.2f}".format(stats[i]))
+                sample_name = stats[table_header.index('Sample')]
+                sample_name = sample_name.replace("_dedup", "")
+                for col in dict_columns:
+                    if col == ["Percentage_reads_mapped"]:
+                        stat = stats[dict_columns[col]['index']]
+                        stat = float(stat.strip("%"))
+                        data_dict[col] = stat
+                    elif col in ["Bait_design_efficiency","PCT_PF_reads","PCT_PF_UQ_reads","PCT_PF_UQ_reads_aligned","PCT_selected_bases","PCT_off_bait","On_bait_vs_selected","PCT_usable_bases_on_bait","PCT_usable_bases_on_target", "Zero_CVG_targets_PCT","PCT_target_bases_2X","PCT_target_bases_10X","PCT_target_bases_20X","PCT_target_bases_30X","PCT_target_bases_40X","PCT_target_bases_50X","PCT_target_bases_100X"]:
+                        stat = stats[dict_columns[col]['index']]
+                        stat = float(stat)*100
+                        stat = float("{0:.2f}".format(stat))
+                        data_dict[col] = stat
+                    elif col in ["Mean_bait_coverage","Mean_target_coverage","Fold_enrichment","Fold_80_base_penalty","HS_penalty_10X","HS_penalty_20X","HS_penalty_30X","HS_penalty_40X","HS_penalty_50X","HS_penalty_100X","AT_dropout","GC_dropout"]:
+                        stat = stats[dict_columns[col]['index']]
+                        stat = float("{0:.2f}".format(stat))
+                        data_dict[col] = stat
+                    elif col == "Sample_name":
+                        data_dict[col] = sample_name
+                    else:
+                        data_dict[col] = stats[dict_columns[col]['index']]
                 
-                sample_stats[stats[0]] = stats
+                sample_stats[sample_name] = data_dict
                 
         return sample_stats
-        # sample_stats[sample name] = [Sample name, Total number of reads, Percentage reads mapped, BAIT_SET, GENOME_SIZE, BAIT_TERRITORY, TARGET_TERRITORY, BAIT_DESIGN_EFFICIENCY, TOTAL_READS, PF_READS, PF_UNIQUE_READS, PCT_PF_READS, PCT_PF_UQ_READS, PF_UQ_READS_ALIGNED, PCT_PF_UQ_READS_ALIGNED, PF_UQ_BASES_ALIGNED, ON_BAIT_BASES, NEAR_BAIT_BASES, OFF_BAIT_BASES, ON_TARGET_BASES, PCT_SELECTED_BASES, PCT_OFF_BAIT, ON_BAIT_VS_SELECTED, MEAN_BAIT_COVERAGE, MEAN_TARGET_COVERAGE, PCT_USABLE_BASES_ON_BAIT, PCT_USABLE_BASES_ON_TARGET, FOLD_ENRICHMENT, ZERO_CVG_TARGETS_PCT, FOLD_80_BASE_PENALTY, PCT_TARGET_BASES_2X, PCT_TARGET_BASES_10X, PCT_TARGET_BASES_20X, PCT_TARGET_BASES_30X, PCT_TARGET_BASES_40X, PCT_TARGET_BASES_50X, PCT_TARGET_BASES_100X, HS_LIBRARY_SIZE, HS_PENALTY_10X, HS_PENALTY_20X, HS_PENALTY_30X, HS_PENALTY_40X, HS_PENALTY_50X, HS_PENALTY_100X, AT_DROPOUT, GC_DROPOUT]
         
     except Exception, e:
         print(repr(e))
