@@ -63,7 +63,7 @@ if __name__ == "__main__":
     parser_processed_upload = subparser_processed.add_parser('upload', help='upload sample data to database')
     parser_processed_upload.add_argument('run', help='Run name')
     parser_processed_upload.add_argument('path', help='Path to run')
-    parser_processed_upload.add_argument('samples', default=[], nargs='*', help='Sample names')
+    parser_processed_upload.add_argument('samples', default=[], nargs='+', help='Sample names')
     parser_processed_upload.set_defaults(func=upload_sample_processed)
     
     parser_processed_delete = subparser_processed.add_parser('delete', help='delete processed sample data from database')
