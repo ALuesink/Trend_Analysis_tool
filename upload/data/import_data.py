@@ -68,7 +68,6 @@ def vcf_file(run, path):
     """Retrieve data from a vcf file, for each sample the number of variants, homo- and heterozygous, number of dbSNP variants and PASS variants is determained"""
     try:
         dic_samples = {}
-        list_samples = []
         file_vcf = commands.getoutput("find " + str(path) + str(run) + "/ -maxdepth 1 -iname \"*.filtered_variants.vcf\"")
             
         with open(file_vcf, "r") as vcffile:
@@ -76,7 +75,6 @@ def vcf_file(run, path):
             list_samples = vcf_file.samples
             for sample in list_samples:
                 dic_samples[sample] = [0,0,0]
-#                list_samples.append(sample)
             for variant in vcf_file:
                 samples = []
                 if "DB"in variant.INFO:
@@ -103,7 +101,7 @@ def vcf_file(run, path):
                     stats[2] += PASS
                     dic_samples[sample] = stats
         
-        return dic_samples, list_samples
+        return dic_samples
         # dic_samples[sample name] = [number of variant, Percentage dbSNP variants from total, Percentage PASS variants from total]
 
     except Exception, e:

@@ -19,9 +19,9 @@ def up_to_database(run, path):
                 print("This run is already in the database")
             else:
                 
-                sample_vcf, list_samples = data.import_data.vcf_file(run, path)
-                sample_dup = data.import_data.runstat_file(run, path)
-                dict_samples = data.import_data.HSMetrics(run, path)
+                sample_vcf = data.import_data.vcf_file(run, path)                   #dictionary: keys are sample names, values are vcf stats
+                sample_dup = data.import_data.runstat_file(run, path)               #dictionary: keys are sample names, values percentage duplication
+                dict_samples = data.import_data.HSMetrics(run, path)                #dictionary: keys are sample names, values are HSMetrics/Picard stats
                 
                 metadata = MetaData()
                 engine = create_engine("mysql+pymysql://"+config.MySQL_DB["username"]+":"+config.MySQL_DB["password"]+"@"+config.MySQL_DB["host"]+"/"+config.MySQL_DB["database"], echo=False)
