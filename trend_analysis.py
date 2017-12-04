@@ -12,6 +12,9 @@ def upload_raw_data(args):
 def upload_processed_data(args):
     upload.processed_data.up_to_database(args.run, args.path)
     
+def upload_sample_processed(args):
+    upload.sample_processed.up_to_database(args.run, args.path, args.samples)
+    
 #Delete frunctions
 def delete_run_all_data(args):
     delete.run_all.del_all_rundata(args.run)
@@ -20,7 +23,7 @@ def delete_run_raw_data(args):
     delete.run_rawdata.del_run_rawdata(args.run)
     
 def delete_sample_data(args):
-    delete.sample_processed.del_sampledata(args.run, args.sample)
+    delete.sample_processed.del_sampledata(args.run, args.samples)
 
 
 if __name__ == "__main__":
@@ -36,7 +39,7 @@ if __name__ == "__main__":
     parser_raw_upload = subparser_raw.add_parser('upload', help='upload raw data to database')
     parser_raw_upload.add_argument('run', help='Run name')
     parser_raw_upload.add_argument('path', help='Path to run')
-    parser_raw_upload.add_argument('sequencer', help='Sequencer name')
+    parser_raw_upload.add_argument('sequencer', choices=['hiseq_umc01', 'nextseq_umc01', 'nextseq_umc02', 'novaseq_umc01'], help='Sequencer name')
     parser_raw_upload.set_defaults(func=upload_raw_data)
     
     parser_raw_delete = subparser_raw.add_parser('delete', help='delete all run data from database')
@@ -47,12 +50,7 @@ if __name__ == "__main__":
     parser_raw_delete.add_argument('run', help='Run name')
     parser_raw_delete.set_defaults(func=delete_run_raw_data)
 
-#    parser_raw_update = subparser_raw.add_parser('update', help='delete all run data and upload new run data to database')    
-#    parser_raw_update.add_argument('run', help='Run name')
-#    parser_raw_update.add_argument('path', help='Path to run')
-#    parser_raw_update.add_argument('sequencer', help='Sequencer name')
-#    parser_raw_update.set_defaults(func=update_run_data)
-    
+
     # processed data
     parser_processed = subparser.add_parser('processed_data', help='Processed data functions')
     subparser_processed = parser_processed.add_subparsers()
@@ -62,8 +60,15 @@ if __name__ == "__main__":
     parser_processed_upload.add_argument('path', help='Path to run')
     parser_processed_upload.set_defaults(func=upload_processed_data)
     
+    parser_processed_upload = subparser_processed.add_parser('upload', help='upload sample data to database')
+    parser_processed_upload.add_argument('run', help='Run name')
+    parser_processed_upload.add_argument('path', help='Path to run')
+    parser_processed_upload.add_argument('samples', default=[], nargs='*', help='Sample names')
+    parser_processed_upload.set_defaults(func=upload_sample_processed)
+    
     parser_processed_delete = subparser_processed.add_parser('delete', help='delete processed sample data from database')
     parser_processed_delete.add_argument('run', help='Run name')
+    parser_processed_delete.add_argument('samples', help='Samples names')
     parser_processed_delete.set_defaults(func=delete_sample_data)
     
     args = parser.parse_args()
