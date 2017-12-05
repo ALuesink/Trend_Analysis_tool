@@ -31,6 +31,13 @@ def delete_sample_data(args):
     """Delete processed samples from the database"""
     delete.sample_processed.del_sampledata(args.run, args.samples)
 
+#Delete + upload functions
+def update_sample_data(args):
+    """Delete and then update processed sample data"""
+    delete.sample_processed.del_sampledata(args.run, args.samples)
+    upload.sample_processed.up_to_database(args.run, args.path, args.samples)
+
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -76,6 +83,11 @@ if __name__ == "__main__":
     parser_processed_delete.add_argument('run', help='Run name')
     parser_processed_delete.add_argument('samples', help='Samples names')
     parser_processed_delete.set_defaults(func=delete_sample_data)
+    
+    parser_processed_update = subparser_processed.add_parser('update', help='delete and upload processed sample data')    
+    parser_processed_update.add_argument('run', help='Run name')
+    parser_processed_update.add_argument('path', help='Path to run')
+    parser_processed_update.add_argument('samples', default=[], nargs='+', help='Sample names')
     
     args = parser.parse_args()
     args.func(args) 
