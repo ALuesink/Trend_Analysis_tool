@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Import run data"""
+"""Functions for retrieving raw and processed run data"""
 
 from datetime import datetime
 from html_table_parser import HTMLTableParser

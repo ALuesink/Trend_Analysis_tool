@@ -7,22 +7,28 @@ import delete
 
 #Upload functions
 def upload_raw_data(args):
+    """Upload raw run data to the database"""
     upload.raw_data.up_to_database(args.run, args.path, args.sequencer)
 
 def upload_processed_data(args):
-    upload.processed_data.up_to_database(args.run, args.path)
+    """Upload processed run data to the database"""
+    upload.run_processed.up_to_database(args.run, args.path)
     
 def upload_sample_processed(args):
+    """Upload processed sample data to the database"""
     upload.sample_processed.up_to_database(args.run, args.path, args.samples)
     
 #Delete frunctions
 def delete_run_all_data(args):
+    """Delete run data from the whole database"""
     delete.run_all.del_all_rundata(args.run)
 
 def delete_run_raw_data(args):
+    """Delete raw run data from the database"""
     delete.run_rawdata.del_run_rawdata(args.run)
     
 def delete_sample_data(args):
+    """Delete processed samples from the database"""
     delete.sample_processed.del_sampledata(args.run, args.samples)
 
 

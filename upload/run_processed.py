@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Upload processed_data to database"""
+"""Upload processed run data to database"""
 
 from sqlalchemy import create_engine, Table, MetaData
 import config

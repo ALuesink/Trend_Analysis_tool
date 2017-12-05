@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Delete run raw data"""
+"""Delete raw run data from the database"""
 
 from sqlalchemy import create_engine, Table, MetaData
 import warnings
