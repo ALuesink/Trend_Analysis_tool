@@ -10,9 +10,26 @@ import vcf
 def laneHTML(run, path):
     """Retrieve data from the lane.html page, the data is the general run data and date per lane"""
     try:    
-        stats_lane = []
-        stats_run = []
+        lane_dict = {}
         epoch = datetime.utcfromtimestamp(0)
+        
+        dict_run = {
+        'Cluster_Raw' : {'column': 'Clusters (Raw)'},
+        'Cluster_PF' : {'column': 'Clusters(PF)'},
+        'Yield_Mbases' : {'column': 'Yield (Mbases)'}
+        }
+        
+        dict_lane = {
+        'Lane' : {'column': 'Lane'},
+        'PF_Clusters' : {'column': 'PF Clusters'},
+        'PCT_of_lane' : {'column': '% of the lane'},
+        'PCT_perfect_barcode' : {'column': '% Perfect barcode'},
+        'PCT_one_mismatch_barcode' : {'column': '% One mismatch barcode'},
+        'Yield_Mbases' : {'column': 'Yield (Mbases)'},
+        'PCT_PF_Clusters' : {'column': '% PF Clusters'},
+        'PCT_Q30_bases' : {'column': '% >= Q30 bases'},
+        'Mean_Quality_Score' : {'column': 'Mean Quality Score'}
+        }
         
         date = run.split("_")[0]
         date = "20" + date[0:2] + "-" + date[2:4] + "-" + date[4:6]
@@ -22,29 +39,66 @@ def laneHTML(run, path):
         lanehtml = commands.getoutput("find "+ str(path) + str(run) +"/Data/Intensities/BaseCalls/Reports/html/*/all/all/all/ -iname \"lane.html\"")
 
         with open(lanehtml, "r") as lane:
+            data_run = {}
             html = lane.read()
             tableParser = HTMLTableParser()
             tableParser.feed(html)
             tables = tableParser.tables                         #tables[1]==run tables[2]==lane
             
+            header_run = tables[1][0]            
+            header_lane = tables[2][0]
+            
+            for col in dict_run:
+                dict_run[col]['index'] = header_run.index(dict_run[col]['column'])
+                
+            for col in dict_lane:
+                dict_lane[col]['index'] = header_lane.index(dict_lane[col]['column'])
+            
+            
             stats_run = tables[1][1]
             stats_run = [convert_numbers(item.replace(",", "")) for item in stats_run]
-            PCT_PF = (float(stats_run[1])/stats_run[0])*100
-            PCT_PF = float("{0:.2f}".format(PCT_PF))
-            stats_run.extend([date,as_date,PCT_PF])                
+            for col in dict_run:
+                stat = stats_run[dict_run[col]['index']]
+                stat = float("{0:.2f}".format(stat))
+                data_run[col] = stat
+                
+            data_run['Date'] = date
+            data_run['asDate'] = as_date               
             
             for lane in tables[2][1:]:
+                data_lane = {}
                 lane = [convert_numbers(item.replace(",", "")) for item in lane]
-                stats_lane.append(lane)
+                lane_num = lane[header_lane.index('Lane')]
+                for col in dict_lane:
+                    stat = lane[dict_lane[col]['index']]
+                    data_lane[col] = stat
+                    
+                lane_dict[lane_num] = data_lane
         
-        return stats_run, stats_lane
+        return data_run, lane_dict
+    
     except Exception, e:
         print(repr(e))
 
 def laneBarcodeHTML(run, path):
     """Retrieve data from the laneBarcode.html page, the data is per barcode/sample per lane"""
     try:
-        stats_sample = []
+        samples_dict = []
+
+        dict_samples = {
+        'Lane' : {'column': 'Lane'},
+        'Project': {'column': 'Project'},
+        'Sample_name': {'column': 'Sample'},
+        'Barcode_sequence': {'column': 'Barcode sequence'},
+        'PF_Clusters' : {'column': 'PF Clusters'},
+        'PCT_of_lane' : {'column': '% of the lane'},
+        'PCT_perfect_barcode' : {'column': '% Perfect barcode'},
+        'PCT_one_mismatch_barcode' : {'column': '% One mismatch barcode'},
+        'Yield_Mbases' : {'column': 'Yield (Mbases)'},
+        'PCT_PF_Clusters' : {'column': '% PF Clusters'},
+        'PCT_Q30_bases' : {'column': '% = Q30 bases'},
+        'Mean_Quality_Score' : {'column': 'Mean Quality Score'}
+        }
 
         samplehtml = commands.getoutput("find " + str(path) + str(run) + "/Data/Intensities/BaseCalls/Reports/html/*/all/all/all/ -iname \"laneBarcode.html\"")
 
@@ -54,12 +108,27 @@ def laneBarcodeHTML(run, path):
             tableParser.feed(html)
             tables = tableParser.tables                         #tables[1]==run tables[2]==sample
             
+            header_samplehtml = tables[2][0]    
+    
+            for col in dict_samples:
+                dict_samples[col]['index'] = header_samplehtml.index(dict_samples[col]['column'])
+            
             for sample_lane in tables[2][1:]:
-                if sample_lane[1].upper() != "DEFAULT":
-                    stats_sample_lane = [convert_numbers(item.replace(",","")) for item in sample_lane]
-                    stats_sample.append(stats_sample_lane)
+                data_sample_lane = {}
+                if sample_lane[header_samplehtml.index('Project')].upper() != "DEFAULT":
+                    stats = [convert_numbers(item.replace(",","")) for item in sample_lane]
+                    
+                    lane = stats[header_samplehtml.index('Lane')]
+                    sample = stats[header_samplehtml.index('Sample')]
+                    lane_sample = str(lane) + "--" + str(sample)
+                    
+                    for col in dict_samples:
+                        stat = stats[dict_samples[col]['index']]
+                        data_sample_lane[col] = stat
+                        
+                    samples_dict[lane_sample] = data_sample_lane
         
-        return stats_sample
+        return samples_dict
 
     except Exception, e:
         print(repr(e))
@@ -144,20 +213,7 @@ def HSMetrics(run, path):
         sample_stats = {}        
         QCStats_file = commands.getoutput("find " + str(path) + str(run) + "/QCStats/ -iname \"HSMetrics_summary.transposed.txt\"")
 
-        with open(QCStats_file, "r") as QCStats:
-            sample = []
-            qc_stats = QCStats.read().split("\n")
-            for line in qc_stats:
-                l = line.split("\t")
-                sample.append(l)
-            
-            qc_table = [list(i) for i in map(None,*sample)]
-            qc_table[0][0] = "Sample"
-            
-            table_header = qc_table[0][:-1]
-            table_header = [item.replace(" ", "_") for item in table_header]
-            
-            dict_columns = {
+        dict_columns = {
                 'Sample_name':{'column': 'Sample'},
                 'Total_number_of_reads': {'column': 'Total_number_of_reads'},
                 'Percentage_reads_mapped': {'column': 'Percentage_reads_mapped'},
@@ -204,7 +260,22 @@ def HSMetrics(run, path):
                 'Bait_territory': {'column': 'BAIT_TERRITORY'},
                 'Target_territory': {'column': 'TARGET_TERRITORY'},
                 'Bait_design_efficiency': {'column': 'BAIT_DESIGN_EFFICIENCY'}
-            }
+        }
+
+        with open(QCStats_file, "r") as QCStats:
+            sample = []
+            qc_stats = QCStats.read().split("\n")
+            for line in qc_stats:
+                l = line.split("\t")
+                sample.append(l)
+            
+            qc_table = [list(i) for i in map(None,*sample)]
+            qc_table[0][0] = "Sample"
+            
+            table_header = qc_table[0][:-1]
+            table_header = [item.replace(" ", "_") for item in table_header]
+            
+            
             for col in dict_columns:
                 dict_columns[col]['index'] = table_header.index(dict_columns[col]['column'])
             
