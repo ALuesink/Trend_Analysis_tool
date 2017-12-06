@@ -18,9 +18,11 @@ def up_to_database(run, path):
             if run in runs_processed_db:
                 print("This run is already in the database")
             else:
-                
+                print("start vcf")
                 sample_vcf = data.import_data.vcf_file(run, path)                   #dictionary: keys are sample names, values are vcf stats
+                print('start dup')                
                 sample_dup = data.import_data.runstat_file(run, path)               #dictionary: keys are sample names, values percentage duplication
+                print('start HSMetrics')                
                 dict_samples = data.import_data.HSMetrics(run, path)                #dictionary: keys are sample names, values are HSMetrics/Picard stats
                 
                 metadata = MetaData()
