@@ -56,4 +56,4 @@ def up_to_database(run, path):
                 conn.close()
                 
         except Exception, e:
-            print(repr(e))
+            print(e)

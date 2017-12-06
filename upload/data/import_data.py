@@ -174,7 +174,7 @@ def vcf_file(run, path):
         # dic_samples[sample name] = [number of variant, Percentage dbSNP variants from total, Percentage PASS variants from total]
 
     except Exception, e:
-        print(repr(e))
+        print(e)
     
     
 def runstat_file(run, path):
@@ -205,7 +205,7 @@ def runstat_file(run, path):
         # sample_dup[sample name] = duplication
         
     except Exception, e:
-        print(repr(e))
+        print(e)
         
 def HSMetrics(run, path):
     """Retrieve data from the HSMetrics_summary.transposed file, from this file all the data is transferred to a dictionary"""
@@ -309,4 +309,4 @@ def HSMetrics(run, path):
         return sample_stats
         
     except Exception, e:
-        print(repr(e))
+        print(e)
