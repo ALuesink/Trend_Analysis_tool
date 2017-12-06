@@ -196,7 +196,7 @@ def runstat_file(run, path):
                 dup = 0
                 for x in stats:
                     if "%duplication" in x:
-                        dup = x.split("%")[0].strip("\t").strip()
+                        dup = float(x.split("%")[0].strip("\t").strip())
                         dup = float("{0:.2f}".format(dup))
                 
                 sample_dup[sample_name] = dup
@@ -287,7 +287,7 @@ def HSMetrics(run, path):
                 sample_name = sample_name.replace("_dedup", "")
                 for col in dict_columns:
                     if col == ["Percentage_reads_mapped"]:
-                        stat = stats[dict_columns[col]['index']]
+                        stat = float(stats[dict_columns[col]['index']])
                         stat = float(stat.strip("%"))
                         data_dict[col] = stat
                     elif col in ["Bait_design_efficiency","PCT_PF_reads","PCT_PF_UQ_reads","PCT_PF_UQ_reads_aligned","PCT_selected_bases","PCT_off_bait","On_bait_vs_selected","PCT_usable_bases_on_bait","PCT_usable_bases_on_target", "Zero_CVG_targets_PCT","PCT_target_bases_2X","PCT_target_bases_10X","PCT_target_bases_20X","PCT_target_bases_30X","PCT_target_bases_40X","PCT_target_bases_50X","PCT_target_bases_100X"]:
@@ -296,7 +296,7 @@ def HSMetrics(run, path):
                         stat = float("{0:.2f}".format(stat))
                         data_dict[col] = stat
                     elif col in ["Mean_bait_coverage","Mean_target_coverage","Fold_enrichment","Fold_80_base_penalty","HS_penalty_10X","HS_penalty_20X","HS_penalty_30X","HS_penalty_40X","HS_penalty_50X","HS_penalty_100X","AT_dropout","GC_dropout"]:
-                        stat = stats[dict_columns[col]['index']]
+                        stat = float(stats[dict_columns[col]['index']])
                         stat = float("{0:.2f}".format(stat))
                         data_dict[col] = stat
                     elif col == "Sample_name":
