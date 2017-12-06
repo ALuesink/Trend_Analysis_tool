@@ -39,9 +39,9 @@ def update_sample_proc_data(args):
 
 def update_run_data(args):
     """Delete and then update all run data"""
-    delete.run_all.del_all_rundata(args.run_old)
-    upload.raw_data.up_to_database(args.run_new, args.path, args.sequencer)
-    upload.run_processed.up_to_database(args.run_new, args.path)
+    delete.run_all.del_all_rundata(args.run)
+    upload.raw_data.up_to_database(args.run, args.path, args.sequencer)
+    upload.run_processed.up_to_database(args.run, args.path)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -95,53 +95,15 @@ if __name__ == "__main__":
     
     parser_update_sample_proc = subparser_update.add_parser('sample', help='delete and update processed sample data')
     parser_update_sample_proc.add_argument('run', help='Run name')
-    parser_update_sample_proc.add_argument(')
+    parser_update_sample_proc.add_argument('path', help='Path to run')
+    parser_update_sample_proc.add_argument('samples', default=[], nargs='+', help='Sample names')
+    parser_update_sample_proc.set_defaults(func=update_sample_proc_data)
 
-    
-    
-    # raw data
-    parser_raw = subparser.add_parser('raw_data', help='Raw data functions')
-    subparser_raw = parser_raw.add_subparsers()
-    
-    parser_raw_upload = subparser_raw.add_parser('upload', help='upload raw data to database')
-    parser_raw_upload.add_argument('run', help='Run name')
-    parser_raw_upload.add_argument('path', help='Path to run')
-    parser_raw_upload.add_argument('sequencer', choices=['hiseq_umc01', 'nextseq_umc01', 'nextseq_umc02', 'novaseq_umc01'], help='Sequencer name')
-    parser_raw_upload.set_defaults(func=upload_raw_data)
-    
-    parser_raw_delete = subparser_raw.add_parser('delete', help='delete all run data from database')
-    parser_raw_delete.add_argument('run', help='Run name')
-    parser_raw_delete.set_defaults(func=delete_run_all_data)
-    
-    parser_raw_delete = subparser_raw.add_parser('delete', help='delete all raw run data from database')
-    parser_raw_delete.add_argument('run', help='Run name')
-    parser_raw_delete.set_defaults(func=delete_run_raw_data)
-
-
-    # processed data
-    parser_processed = subparser.add_parser('processed_data', help='Processed data functions')
-    subparser_processed = parser_processed.add_subparsers()
-    
-    parser_processed_upload = subparser_processed.add_parser('upload', help='upload processed data to database')
-    parser_processed_upload.add_argument('run', help='Run name')
-    parser_processed_upload.add_argument('path', help='Path to run')
-    parser_processed_upload.set_defaults(func=upload_processed_data)
-    
-    parser_processed_upload = subparser_processed.add_parser('upload', help='upload sample data to database')
-    parser_processed_upload.add_argument('run', help='Run name')
-    parser_processed_upload.add_argument('path', help='Path to run')
-    parser_processed_upload.add_argument('samples', default=[], nargs='+', help='Sample names')
-    parser_processed_upload.set_defaults(func=upload_sample_processed)
-    
-    parser_processed_delete = subparser_processed.add_parser('delete', help='delete processed sample data from database')
-    parser_processed_delete.add_argument('run', help='Run name')
-    parser_processed_delete.add_argument('samples', help='Samples names')
-    parser_processed_delete.set_defaults(func=delete_sample_data)
-    
-    parser_processed_update = subparser_processed.add_parser('update', help='delete and upload processed sample data')    
-    parser_processed_update.add_argument('run', help='Run name')
-    parser_processed_update.add_argument('path', help='Path to run')
-    parser_processed_update.add_argument('samples', default=[], nargs='+', help='Sample names')
-    
+    parser_update_run = subparser_update.add_parser('run_all', help='delete and update alle run data')
+    parser_update_run.add_argument('run', help='Run name')
+    parser_update_run.add_argument('path', help='Path to run')
+    parser_update_run.add_argument('sequencer', choices=['hiseq_umc01', 'nextseq_umc01', 'nextseq_umc02', 'novaseq_umc01'], help='Sequencer name')
+    parser_update_run.set_defaults(func=update_run_data)
+        
     args = parser.parse_args()
     args.func(args) 
