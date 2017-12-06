@@ -16,7 +16,7 @@ def laneHTML(run, path):
         dict_run = {
         'Cluster_Raw' : {'column': 'Clusters (Raw)'},
         'Cluster_PF' : {'column': 'Clusters(PF)'},
-        'Yield_Mbases' : {'column': 'Yield (Mbases)'}
+        'Yield_Mbases' : {'column': 'Yield (MBases)'}
         }
         
         dict_lane = {
