@@ -27,7 +27,7 @@ def laneHTML(run, path):
         'PCT_one_mismatch_barcode' : {'column': '% One mismatch barcode'},
         'Yield_Mbases' : {'column': 'Yield (Mbases)'},
         'PCT_PF_Clusters' : {'column': '% PF Clusters'},
-        'PCT_Q30_bases' : {'column': '% >= Q30 bases'},
+        'PCT_Q30_bases' : {'column': '% = Q30 bases'},
         'Mean_Quality_Score' : {'column': 'Mean Quality Score'}
         }
         
