@@ -286,7 +286,7 @@ def HSMetrics(run, path):
                 sample_name = stats[table_header.index('Sample')]
                 sample_name = sample_name.replace("_dedup", "")
                 for col in dict_columns:
-                    if col == ["Percentage_reads_mapped"]:
+                    if col == "Percentage_reads_mapped":
                         stat = stats[dict_columns[col]['index']]
                         stat = float(stat.strip("%"))
                         data_dict[col] = stat
