@@ -39,11 +39,12 @@ def up_to_database(run, path):
                 baitset_db = database.get.BaitSet()
                 
                 for sample in dict_samples:
+                    print(sample)
                     bait_id = 0
                     vcf = sample_vcf[sample]
                     dup = sample_dup[sample]
                     stats = dict_samples[sample]
-                    
+                    print(stats['Percentage_reads_mapped'])
                 if stats['Bait_name'] in baitset_db:
                     bait_id = baitset_db[stats['Bait_name']]
                 else:
