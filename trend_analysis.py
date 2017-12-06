@@ -91,7 +91,7 @@ if __name__ == "__main__":
     
     # update data
     parser_update = subparser.add_parser('update', help='Delete and update data')
-    subparser_update = parser_update.add_suparsers()
+    subparser_update = parser_update.add_subparsers()
     
     parser_update_sample_proc = subparser_update.add_parser('sample', help='delete and update processed sample data')
     parser_update_sample_proc.add_argument('run', help='Run name')
