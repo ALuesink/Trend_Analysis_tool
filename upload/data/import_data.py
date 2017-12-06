@@ -83,7 +83,7 @@ def laneHTML(run, path):
 def laneBarcodeHTML(run, path):
     """Retrieve data from the laneBarcode.html page, the data is per barcode/sample per lane"""
     try:
-        samples_dict = []
+        samples_dict = {}
 
         dict_samples = {
         'Lane' : {'column': 'Lane'},
