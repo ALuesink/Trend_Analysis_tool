@@ -196,7 +196,7 @@ def runstat_file(run, path):
                 dup = 0
                 for x in stats:
                     if "%duplication" in x:
-                        dup = float(x.split("%")[0].strip("\t").strip())
+                        dup = float(x.split("%")[0].strip("\t").strip("%").strip())
                         dup = float("{0:.2f}".format(dup))
                 
                 sample_dup[sample_name] = dup
