@@ -47,7 +47,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     subparser = parser.add_subparsers()
     
-#    output_parser = argparse.ArgumentParser(add_help=False)
     
     # upload data
     parser_upload = subparser.add_parser('upload', help='Upload data to database')

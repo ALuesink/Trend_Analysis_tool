@@ -12,7 +12,9 @@ def up_to_database(run, path, sequencer):
     """Get data of inserted run and upload the data to the database"""
     with warnings.catch_warnings():
         warnings.simplefilter("error")
-        
+        print("run: " + run)
+        print("path: " + path)
+        print("sequencer: " + sequencer)
         try:        
             runs_db = database.get.Runs()
             if run in runs_db:
