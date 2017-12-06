@@ -24,7 +24,7 @@ def up_to_database(run, path):
                 sample_dup = data.import_data.runstat_file(run, path)               #dictionary: keys are sample names, values percentage duplication
                 print('start HSMetrics')                
                 dict_samples = data.import_data.HSMetrics(run, path)                #dictionary: keys are sample names, values are HSMetrics/Picard stats
-                
+                print('start uploaden')
                 metadata = MetaData()
                 engine = create_engine("mysql+pymysql://"+config.MySQL_DB["username"]+":"+config.MySQL_DB["password"]+"@"+config.MySQL_DB["host"]+"/"+config.MySQL_DB["database"], echo=False)
                 conn = engine.connect()
