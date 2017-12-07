@@ -30,6 +30,10 @@ def delete_run_raw_data(args):
 def delete_sample_proc_data(args):
     """Delete processed samples from the database"""
     delete.sample_processed.del_sampledata(args.run, args.samples)
+    
+def delete_run_proc_data(args):
+    """Delete processed run data"""
+    delete.run_processed.del_runprocessed(args.run)
 
 #Delete + upload functions
 def update_sample_proc_data(args):
@@ -86,6 +90,10 @@ if __name__ == "__main__":
     parser_delete_sample_proc.add_argument('run', help='Run name')
     parser_delete_sample_proc.add_argument('samples', default=[], nargs='+', help='Sample names')
     parser_delete_sample_proc.set_defaults(func=delete_sample_proc_data)
+    
+    parser_delete_run_proc = subparser_delete.add_parser('run_proc', help='delete processed run data from the database')
+    parser_delete_run_proc.add_argument('run', help='Run name')
+    parser_delete_run_proc.set_defaults(func=delete_run_proc_data)
     
     
     # update data

@@ -36,7 +36,7 @@ def laneHTML(run, path):
         d = datetime.strptime(date, "%Y-%m-%d")
         as_date = (d-epoch).days
 
-        lanehtml = commands.getoutput("find "+ str(path) + str(run) +"/Data/Intensities/BaseCalls/Reports/html/*/all/all/all/ -iname \"lane.html\"")
+        lanehtml = commands.getoutput("find "+ str(path) + "/" + str(run) +"/Data/Intensities/BaseCalls/Reports/html/*/all/all/all/ -iname \"lane.html\"")
 
         with open(lanehtml, "r") as lane:
             data_run = {}
@@ -100,7 +100,7 @@ def laneBarcodeHTML(run, path):
         'Mean_Quality_Score' : {'column': 'Mean Quality Score'}
         }
 
-        samplehtml = commands.getoutput("find " + str(path) + str(run) + "/Data/Intensities/BaseCalls/Reports/html/*/all/all/all/ -iname \"laneBarcode.html\"")
+        samplehtml = commands.getoutput("find " + str(path) + "/"  + str(run) + "/Data/Intensities/BaseCalls/Reports/html/*/all/all/all/ -iname \"laneBarcode.html\"")
 
         with open(samplehtml, "r") as sample:
             html = sample.read()
@@ -137,7 +137,7 @@ def vcf_file(run, path):
     """Retrieve data from a vcf file, for each sample the number of variants, homo- and heterozygous, number of dbSNP variants and PASS variants is determained"""
     try:
         dic_samples = {}
-        file_vcf = commands.getoutput("find " + str(path) + str(run) + "/ -maxdepth 1 -iname \"*.filtered_variants.vcf\"")
+        file_vcf = commands.getoutput("find " + str(path) + "/"  + str(run) + "/ -maxdepth 1 -iname \"*.filtered_variants.vcf\"")
             
         with open(file_vcf, "r") as vcffile:
             vcf_file = vcf.Reader(vcffile)
@@ -181,7 +181,7 @@ def runstat_file(run, path):
     """Retrieve data from the runstats file, for each sample the percentage duplication is retrieved"""
     try:
         sample_dup = {}        
-        runstats_file = commands.getoutput("find " + str(path) + str(run) + "/ -iname \"run_stats.txt\"")
+        runstats_file = commands.getoutput("find " + str(path) + "/"  + str(run) + "/ -iname \"run_stats.txt\"")
         
         with open(runstats_file, "r") as runstats:
             run_stats = runstats.read()
@@ -211,7 +211,7 @@ def HSMetrics(run, path):
     """Retrieve data from the HSMetrics_summary.transposed file, from this file all the data is transferred to a dictionary"""
     try:
         sample_stats = {}        
-        QCStats_file = commands.getoutput("find " + str(path) + str(run) + "/QCStats/ -iname \"HSMetrics_summary.transposed.txt\"")
+        QCStats_file = commands.getoutput("find " + str(path) + "/"  + str(run) + "/QCStats/ -iname \"HSMetrics_summary.transposed.txt\"")
 
         dict_columns = {
                 'Sample_name':{'column': 'Sample'},
