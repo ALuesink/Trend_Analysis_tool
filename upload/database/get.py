@@ -9,6 +9,7 @@ engine = create_engine("mysql+pymysql://"+config.MySQL_DB["username"]+":"+config
 
 
 def Runs():
+    """Get Runs and Run ID's of runs already in the database"""
     conn = engine.connect()    
     Run = Table("Run",metadata,autoload=True,autoload_with=engine)  
     
@@ -22,6 +23,7 @@ def Runs():
     return run_in_db
     
 def Sequencer():
+    """Get Sequencer and Sequencer ID's of sequencers already in the database"""
     conn = engine.connect()
     Sequencer = Table("Sequencer",metadata,autoload=True,autoload_with=engine)
     
@@ -35,6 +37,7 @@ def Sequencer():
     return seq_in_db
 
 def BaitSet():
+    """Get Bait Set and Bait Set ID's of bait sets already in the database"""
     conn = engine.connect()
     Bait_Set = Table("Bait_Set", metadata, autoload=True, autoload_with=engine)
     
@@ -48,6 +51,7 @@ def BaitSet():
     return baitset_in_db
 
 def Runs_processed():
+    """Get Runs which are already in the Sample Processed table"""
     conn = engine.connect()
     Sample_Processed = Table("Sample_Processed", metadata, autoload=True, autoload_with=engine)
     Run = Table("Run",metadata,autoload=True,autoload_with=engine)

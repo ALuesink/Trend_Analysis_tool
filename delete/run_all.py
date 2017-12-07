@@ -23,17 +23,21 @@ def del_all_rundata(run):
             conn = engine.connect()        
             
             run_in_db = database.get.Runs()
-            run_id = run_in_db[run]
             
-            del_Run = Run.delete().where(Run.c.Run_ID == run_id)
-            del_Run_per_Lane = Run_per_Lane.delete().where(Run_per_Lane.c.Run_ID == run_id)
-            del_Sample_Sequencer = Sample_Sequencer.delete().where(Sample_Sequencer.c.Run_ID == run_id)
-            del_Sample_Processed = Sample_Processed.delete().where(Sample_Processed.c.Run_ID == run_id)            
-            
-            conn.execute(del_Run)
-            conn.execute(del_Run_per_Lane)
-            conn.execute(del_Sample_Sequencer)
-            conn.execute(del_Sample_Processed)            
+            if run in run_in_db:            
+                run_id = run_in_db[run]
+                
+                del_Run = Run.delete().where(Run.c.Run_ID == run_id)
+                del_Run_per_Lane = Run_per_Lane.delete().where(Run_per_Lane.c.Run_ID == run_id)
+                del_Sample_Sequencer = Sample_Sequencer.delete().where(Sample_Sequencer.c.Run_ID == run_id)
+                del_Sample_Processed = Sample_Processed.delete().where(Sample_Processed.c.Run_ID == run_id)            
+                
+                conn.execute(del_Run)
+                conn.execute(del_Run_per_Lane)
+                conn.execute(del_Sample_Sequencer)
+                conn.execute(del_Sample_Processed)
+            else:
+                print("This run is not in the database")
             
             conn.close()
         

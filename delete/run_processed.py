@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Delete processed samples from the database"""
+"""Delete processed run"""
 
 from sqlalchemy import create_engine, Table, MetaData
 import warnings
@@ -7,7 +7,7 @@ import config
 
 import database
 
-def del_sampledata(run, samples):
+def del_runprocessed(run):
     with warnings.catch_warnings():
         warnings.simplefilter("error")
         
@@ -23,12 +23,13 @@ def del_sampledata(run, samples):
             
             if run in run_in_db:            
                 run_id = run_in_db[run]
-                for sample in samples:
-                    del_Sample = Sample_Processed.delete().where(Sample_Processed.c.Run_ID == run_id ).where(Sample_Processed.c.Sample_name == sample)
-                    conn.execute(del_Sample)
+                
+                del_Run = Sample_Processed.delete().where(Sample_Processed.c.Run_ID == run_id)
+                conn.execute(del_Run)
             else:
-                print("This run is not in the database")
+                print("There is no processed data in the database for this run")
             
             conn.close()
+            
         except Exception, e:
             print(repr(e))
