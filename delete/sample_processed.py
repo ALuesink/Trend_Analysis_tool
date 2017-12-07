@@ -12,7 +12,6 @@ def del_sampledata(run, samples):
         warnings.simplefilter("error")
         
         try:
-            print(samples)
             metadata = MetaData()
             engine = create_engine("mysql+pymysql://"+config.MySQL_DB["username"]+":"+config.MySQL_DB["password"]+"@"+config.MySQL_DB["host"]+"/"+config.MySQL_DB["database"], echo=False)
             
@@ -20,9 +19,8 @@ def del_sampledata(run, samples):
             
             conn = engine.connect()
             
-            run_in_db = database.get.Runs_processed()
+            run_in_db = database.get.Runs()
             run_id = run_in_db[run]
-            
             for sample in samples:
                 del_Sample = Sample_Processed.delete().where(Sample_Processed.c.Run_ID == run_id ).where(Sample_Processed.c.Sample_name == sample)
                 conn.execute(del_Sample)

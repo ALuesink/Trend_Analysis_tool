@@ -40,8 +40,8 @@ def update_sample_proc_data(args):
 def update_run_data(args):
     """Delete and then update all run data"""
     delete.run_all.del_all_rundata(args.run)
-    upload.raw_data.up_to_database(args.run, args.path, args.sequencer)
-    upload.run_processed.up_to_database(args.run, args.path)
+    upload.raw_data.up_to_database(args.run, args.path_raw, args.sequencer)
+    upload.run_processed.up_to_database(args.run, args.path_proc)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -100,7 +100,8 @@ if __name__ == "__main__":
 
     parser_update_run = subparser_update.add_parser('run_all', help='delete and update all run data')
     parser_update_run.add_argument('run', help='Run name')
-    parser_update_run.add_argument('path', help='Path to run')
+    parser_update_run.add_argument('path_raw', help='Path to raw run')
+    parser_update_run.add_argument('path_proc', help='Path to processed run')
     parser_update_run.add_argument('sequencer', choices=['hiseq_umc01', 'nextseq_umc01', 'nextseq_umc02', 'novaseq_umc01'], help='Sequencer name')
     parser_update_run.set_defaults(func=update_run_data)
         
