@@ -12,6 +12,7 @@ def del_sampledata(run, samples):
         warnings.simplefilter("error")
         
         try:
+            print(samples)
             metadata = MetaData()
             engine = create_engine("mysql+pymysql://"+config.MySQL_DB["username"]+":"+config.MySQL_DB["password"]+"@"+config.MySQL_DB["host"]+"/"+config.MySQL_DB["database"], echo=False)
             

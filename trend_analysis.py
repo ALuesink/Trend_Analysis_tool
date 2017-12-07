@@ -98,7 +98,7 @@ if __name__ == "__main__":
     parser_update_sample_proc.add_argument('samples', default=[], nargs='+', help='Sample names')
     parser_update_sample_proc.set_defaults(func=update_sample_proc_data)
 
-    parser_update_run = subparser_update.add_parser('run_all', help='delete and update alle run data')
+    parser_update_run = subparser_update.add_parser('run_all', help='delete and update all run data')
     parser_update_run.add_argument('run', help='Run name')
     parser_update_run.add_argument('path', help='Path to run')
     parser_update_run.add_argument('sequencer', choices=['hiseq_umc01', 'nextseq_umc01', 'nextseq_umc02', 'novaseq_umc01'], help='Sequencer name')
