@@ -2,50 +2,52 @@
 
 import argparse
 
-import upload
-import delete
+import scripts.upload
+import scripts.delete
+#import upload
+#import delete
 
 #Upload functions
 def upload_raw_data(args):
     """Upload raw run data to the database"""
-    upload.raw_data.up_to_database(args.run, args.path, args.sequencer)
+    scripts.upload.raw_data.up_to_database(args.run, args.path, args.sequencer)
 
 def upload_processed_data(args):
     """Upload processed run data to the database"""
-    upload.run_processed.up_to_database(args.run, args.path)
+    scripts.upload.run_processed.up_to_database(args.run, args.path)
     
 def upload_sample_processed(args):
     """Upload processed sample data to the database"""
-    upload.sample_processed.up_to_database(args.run, args.path, args.samples)
-    
+    scripts.upload.sample_processed.up_to_database(args.run, args.path, args.samples)
+
 #Delete frunctions
 def delete_run_all_data(args):
     """Delete run data from the whole database"""
-    delete.run_all.del_all_rundata(args.run)
+    scripts.delete.run_all.del_all_rundata(args.run)
 
 def delete_run_raw_data(args):
     """Delete raw run data from the database"""
-    delete.run_rawdata.del_run_rawdata(args.run)
+    scripts.delete.run_rawdata.del_run_rawdata(args.run)
     
 def delete_sample_proc_data(args):
     """Delete processed samples from the database"""
-    delete.sample_processed.del_sampledata(args.run, args.samples)
+    scripts.delete.sample_processed.del_sampledata(args.run, args.samples)
     
 def delete_run_proc_data(args):
     """Delete processed run data"""
-    delete.run_processed.del_runprocessed(args.run)
+    scripts.delete.run_processed.del_runprocessed(args.run)
 
 #Delete + upload functions
 def update_sample_proc_data(args):
     """Delete and then update processed sample data"""
-    delete.sample_processed.del_sampledata(args.run, args.samples)
-    upload.sample_processed.up_to_database(args.run, args.path, args.samples)
+    scripts.delete.sample_processed.del_sampledata(args.run, args.samples)
+    scripts.upload.sample_processed.up_to_database(args.run, args.path, args.samples)
 
 def update_run_data(args):
     """Delete and then update all run data"""
-    delete.run_all.del_all_rundata(args.run)
-    upload.raw_data.up_to_database(args.run, args.path_raw, args.sequencer)
-    upload.run_processed.up_to_database(args.run, args.path_proc)
+    scripts.delete.run_all.del_all_rundata(args.run)
+    scripts.upload.raw_data.up_to_database(args.run, args.path_raw, args.sequencer)
+    scripts.upload.run_processed.up_to_database(args.run, args.path_proc)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
