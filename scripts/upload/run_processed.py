@@ -18,11 +18,11 @@ def up_to_database(run, path):
                 print("This run is already in the database")
             else:
                 print("start vcf")
-                sample_vcf = data.import_data.vcf_file(run, path)                   #dictionary: keys are sample names, values are vcf stats
+                sample_vcf = data.import_data.vcf_file(run, path)                   # dictionary: keys are sample names, values are vcf stats
                 print('start dup')
-                sample_dup = data.import_data.runstat_file(run, path)               #dictionary: keys are sample names, values percentage duplication
+                sample_dup = data.import_data.runstat_file(run, path)               # dictionary: keys are sample names, values percentage duplication
                 print('start HSMetrics')
-                dict_samples = data.import_data.HSMetrics(run, path)                #dictionary: keys are sample names, values are HSMetrics/Picard stats
+                dict_samples = data.import_data.HSMetrics(run, path)                # dictionary: keys are sample names, values are HSMetrics/Picard stats
                 print('start uploaden')
 
                 engine = connection.engine()

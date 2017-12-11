@@ -14,9 +14,9 @@ def up_to_database(run, path, samples):
 
             runs_processed_db = get.runs_processed()
 
-            sample_vcf = data.import_data.vcf_file(run, path)                   #dictionary: keys are sample names, values are vcf stats
-            sample_dup = data.import_data.runstat_file(run, path)               #dictionary: keys are sample names, values percentage duplication
-            dict_samples = data.import_data.HSMetrics(run, path)                #dictionary: keys are sample names, values are HSMetrics/Picard stats
+            sample_vcf = data.import_data.vcf_file(run, path)                   # dictionary: keys are sample names, values are vcf stats
+            sample_dup = data.import_data.runstat_file(run, path)               # dictionary: keys are sample names, values percentage duplication
+            dict_samples = data.import_data.HSMetrics(run, path)                # dictionary: keys are sample names, values are HSMetrics/Picard stats
 
             engine = connection.engine()
             conn = engine.connect()

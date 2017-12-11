@@ -1,45 +1,54 @@
-"""Trend Analysis tool"""
+"""Trend Analysis tool
+"""
 
 import argparse
-
 import scripts.upload
 import scripts.delete
 
-#Upload functions
+
+# Upload functions
 def upload_raw_data(args):
     """Upload raw run data to the database"""
     scripts.upload.raw_data.up_to_database(args.run, args.path, args.sequencer)
+
 
 def upload_processed_data(args):
     """Upload processed run data to the database"""
     scripts.upload.run_processed.up_to_database(args.run, args.path)
 
+
 def upload_sample_processed(args):
     """Upload processed sample data to the database"""
     scripts.upload.sample_processed.up_to_database(args.run, args.path, args.samples)
 
-#Delete frunctions
+
+# Delete frunctions
 def delete_run_all_data(args):
     """Delete run data from the whole database"""
     scripts.delete.run_all.del_all_rundata(args.run)
+
 
 def delete_run_raw_data(args):
     """Delete raw run data from the database"""
     scripts.delete.run_rawdata.del_run_rawdata(args.run)
 
+
 def delete_sample_proc_data(args):
     """Delete processed samples from the database"""
     scripts.delete.sample_processed.del_sampledata(args.run, args.samples)
+
 
 def delete_run_proc_data(args):
     """Delete processed run data"""
     scripts.delete.run_processed.del_runprocessed(args.run)
 
-#Delete + upload functions
+
+# Delete + upload functions
 def update_sample_proc_data(args):
     """Delete and then update processed sample data"""
     scripts.delete.sample_processed.del_sampledata(args.run, args.samples)
     scripts.upload.sample_processed.up_to_database(args.run, args.path, args.samples)
+
 
 def update_run_data(args):
     """Delete and then update all run data"""
@@ -47,10 +56,10 @@ def update_run_data(args):
     scripts.upload.raw_data.up_to_database(args.run, args.path_raw, args.sequencer)
     scripts.upload.run_processed.up_to_database(args.run, args.path_proc)
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     subparser = parser.add_subparsers()
-
 
     # upload data
     parser_upload = subparser.add_parser('upload', help='Upload data to database')
@@ -73,7 +82,6 @@ if __name__ == "__main__":
     parser_upload_samples_proc.add_argument('samples', default=[], nargs='+', help='Sample names')
     parser_upload_samples_proc.set_defaults(func=upload_sample_processed)
 
-
     # delete data
     parser_delete = subparser.add_parser('delete', help='Delete data from database')
     subparser_delete = parser_delete.add_subparsers()
@@ -94,7 +102,6 @@ if __name__ == "__main__":
     parser_delete_run_proc = subparser_delete.add_parser('run_proc', help='delete processed run data from the database')
     parser_delete_run_proc.add_argument('run', help='Run name')
     parser_delete_run_proc.set_defaults(func=delete_run_proc_data)
-
 
     # update data
     parser_update = subparser.add_parser('update', help='Delete and update data')
