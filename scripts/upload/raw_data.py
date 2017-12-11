@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-"""Upload raw data"""
+"""Upload raw data
+"""
 
 from ..database import connection, get, set_run
 import warnings
@@ -7,7 +8,8 @@ import data
 
 
 def up_to_database(run, path, sequencer):
-    """Get data of inserted run and upload the data to the database"""
+    """Get data of inserted run and upload the data to the database
+    """
     with warnings.catch_warnings():
         warnings.simplefilter("error")
         print("run: " + run)
