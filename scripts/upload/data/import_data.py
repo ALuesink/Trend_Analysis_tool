@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-"""Functions for retrieving raw and processed run data"""
+"""Functions for retrieving raw and processed run data
+"""
 
 from datetime import datetime
 from html_table_parser import HTMLTableParser
@@ -8,17 +9,18 @@ import commands
 import vcf
 
 def laneHTML(run, path):
-    """Retrieve data from the lane.html page, the data is the general run data and date per lane"""
-    try:    
+    """Retrieve data from the lane.html page, the data is the general run data and date per lane
+    """
+    try:
         lane_dict = {}
         epoch = datetime.utcfromtimestamp(0)
-        
+
         dict_run = {
         'Cluster_Raw' : {'column': 'Clusters (Raw)'},
         'Cluster_PF' : {'column': 'Clusters(PF)'},
         'Yield_Mbases' : {'column': 'Yield (MBases)'}
         }
-        
+
         dict_lane = {
         'Lane' : {'column': 'Lane'},
         'PF_Clusters' : {'column': 'PF Clusters'},
@@ -30,7 +32,7 @@ def laneHTML(run, path):
         'PCT_Q30_bases' : {'column': '% = Q30 bases'},
         'Mean_Quality_Score' : {'column': 'Mean Quality Score'}
         }
-        
+
         date = run.split("_")[0]
         date = "20" + date[0:2] + "-" + date[2:4] + "-" + date[4:6]
         d = datetime.strptime(date, "%Y-%m-%d")
@@ -44,27 +46,27 @@ def laneHTML(run, path):
             tableParser = HTMLTableParser()
             tableParser.feed(html)
             tables = tableParser.tables                         #tables[1]==run tables[2]==lane
-            
-            header_run = tables[1][0]            
+
+            header_run = tables[1][0]
             header_lane = tables[2][0]
-            
+
             for col in dict_run:
                 dict_run[col]['index'] = header_run.index(dict_run[col]['column'])
-                
+
             for col in dict_lane:
                 dict_lane[col]['index'] = header_lane.index(dict_lane[col]['column'])
-            
-            
+
+
             stats_run = tables[1][1]
             stats_run = [convert_numbers(item.replace(",", "")) for item in stats_run]
             for col in dict_run:
                 stat = stats_run[dict_run[col]['index']]
                 stat = float("{0:.2f}".format(stat))
                 data_run[col] = stat
-                
+
             data_run['Date'] = date
-            data_run['asDate'] = as_date               
-            
+            data_run['asDate'] = as_date
+
             for lane in tables[2][1:]:
                 data_lane = {}
                 lane = [convert_numbers(item.replace(",", "")) for item in lane]
@@ -72,16 +74,17 @@ def laneHTML(run, path):
                 for col in dict_lane:
                     stat = lane[dict_lane[col]['index']]
                     data_lane[col] = stat
-                    
+
                 lane_dict[lane_num] = data_lane
-        
+
         return data_run, lane_dict
-    
+
     except Exception, e:
         print(e)
 
 def laneBarcodeHTML(run, path):
-    """Retrieve data from the laneBarcode.html page, the data is per barcode/sample per lane"""
+    """Retrieve data from the laneBarcode.html page, the data is per barcode/sample per lane
+    """
     try:
         samples_dict = {}
 
@@ -107,38 +110,39 @@ def laneBarcodeHTML(run, path):
             tableParser = HTMLTableParser()
             tableParser.feed(html)
             tables = tableParser.tables                         #tables[1]==run tables[2]==sample
-            
-            header_samplehtml = tables[2][0]    
-    
+
+            header_samplehtml = tables[2][0]
+
             for col in dict_samples:
                 dict_samples[col]['index'] = header_samplehtml.index(dict_samples[col]['column'])
-            
+
             for sample_lane in tables[2][1:]:
                 data_sample_lane = {}
                 if sample_lane[header_samplehtml.index('Project')].upper() != "DEFAULT":
                     stats = [convert_numbers(item.replace(",","")) for item in sample_lane]
-                    
+
                     lane = stats[header_samplehtml.index('Lane')]
                     sample = stats[header_samplehtml.index('Sample')]
                     lane_sample = str(lane) + "--" + str(sample)
-                    
+
                     for col in dict_samples:
                         stat = stats[dict_samples[col]['index']]
                         data_sample_lane[col] = stat
-                        
+
                     samples_dict[lane_sample] = data_sample_lane
-        
+
         return samples_dict
 
     except Exception, e:
         print(e)
 
 def vcf_file(run, path):
-    """Retrieve data from a vcf file, for each sample the number of variants, homo- and heterozygous, number of dbSNP variants and PASS variants is determained"""
+    """Retrieve data from a vcf file, for each sample the number of variants, homo- and heterozygous, number of dbSNP variants and PASS variants is determained
+    """
     try:
         dic_samples = {}
         file_vcf = commands.getoutput("find " + str(path) + "/"  + str(run) + "/ -maxdepth 1 -iname \"*.filtered_variants.vcf\"")
-            
+
         with open(file_vcf, "r") as vcffile:
             vcf_file = vcf.Reader(vcffile)
             list_samples = vcf_file.samples
@@ -148,69 +152,71 @@ def vcf_file(run, path):
                 samples = []
                 if "DB"in variant.INFO:
                     DB = 1
-                else:	
+                else:
                     DB = 0
 
                 if not variant.FILTER:
                     PASS = 1
                 else:
                     PASS = 0
-                
+
                 if variant.num_het != 0:
                     het_samples = variant.get_hets()
                     samples = [item.sample for item in het_samples]
                 if variant.num_hom_alt != 0:
                     hom_samples = [item.sample for item in variant.get_hom_alts()]
                     samples.extend(hom_samples)
-                    
+
                 for sample in samples:
                     stats = dic_samples[sample]
                     stats[0] += 1
                     stats[1] += DB
                     stats[2] += PASS
                     dic_samples[sample] = stats
-        
+
         return dic_samples
         # dic_samples[sample name] = [number of variant, Percentage dbSNP variants from total, Percentage PASS variants from total]
 
     except Exception, e:
         print(e)
-    
-    
+
+
 def runstat_file(run, path):
-    """Retrieve data from the runstats file, for each sample the percentage duplication is retrieved"""
+    """Retrieve data from the runstats file, for each sample the percentage duplication is retrieved
+    """
     try:
-        sample_dup = {}        
+        sample_dup = {}
         runstats_file = commands.getoutput("find " + str(path) + "/"  + str(run) + "/ -iname \"run_stats.txt\"")
-        
+
         with open(runstats_file, "r") as runstats:
             run_stats = runstats.read()
-            run_stats = run_stats.split("working") 
-            
+            run_stats = run_stats.split("working")
+
             for sample in run_stats[1:]:
                 stats = sample.split("\n")
-                
+
                 sample_name = stats[0].split("/")[-1]
                 sample_name = sample_name.replace("_dedup.flagstat...", "")
-                
+
                 dup = 0
                 for x in stats:
                     if "%duplication" in x:
                         dup = float(x.split("%")[0].strip("\t").strip())
                         dup = float("{0:.2f}".format(dup))
-                
+
                 sample_dup[sample_name] = dup
-                
+
         return sample_dup
         # sample_dup[sample name] = duplication
-        
+
     except Exception, e:
         print(e)
-        
+
 def HSMetrics(run, path):
-    """Retrieve data from the HSMetrics_summary.transposed file, from this file all the data is transferred to a dictionary"""
+    """Retrieve data from the HSMetrics_summary.transposed file, from this file all the data is transferred to a dictionary
+    """
     try:
-        sample_stats = {}        
+        sample_stats = {}
         QCStats_file = commands.getoutput("find " + str(path) + "/"  + str(run) + "/QCStats/ -iname \"HSMetrics_summary.transposed.txt\"")
 
         dict_columns = {
@@ -268,18 +274,18 @@ def HSMetrics(run, path):
             for line in qc_stats:
                 l = line.split("\t")
                 sample.append(l)
-            
+
             qc_table = [list(i) for i in map(None,*sample)]
             qc_table[0][0] = "Sample"
-            
+
             table_header = qc_table[0][:-1]
             table_header = [item.replace(" ", "_") for item in table_header]
-            
-            
+
+
             for col in dict_columns:
                 dict_columns[col]['index'] = table_header.index(dict_columns[col]['column'])
-            
-            
+
+
             for stats in qc_table[1:]:
                 data_dict = {}
                 stats = stats[:-1]      #there is a None at the end of each line
@@ -303,10 +309,10 @@ def HSMetrics(run, path):
                         data_dict[col] = sample_name
                     else:
                         data_dict[col] = stats[dict_columns[col]['index']]
-                
+
                 sample_stats[sample_name] = data_dict
-                
+
         return sample_stats
-        
+
     except Exception, e:
         print(e)
