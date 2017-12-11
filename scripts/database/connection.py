@@ -4,7 +4,7 @@
 from sqlalchemy import create_engine, Table, MetaData
 import config
 
-metadata = MetaData
+metadata = MetaData()
 def engine():
     engine = create_engine("mysql+pymysql://{username}:{password}@{host}/{database}".format(
     username = config.MySQL_DB["username"],

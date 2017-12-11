@@ -2,8 +2,7 @@
 """Upload raw data"""
 
 #from sqlalchemy import create_engine, Table, MetaData
-from scripts import database
-from .. import set_run_name
+from ..database import connection, get, set_run
 #import config
 import warnings
 
@@ -18,16 +17,16 @@ def up_to_database(run, path, sequencer):
         print("path: " + path)
         print("sequencer: " + sequencer)
         try:
-            run = set_run_name(run)
+            run = set_run.set_run_name(run)
             
-            runs_db = database.get.Runs()
+            runs_db = get.Runs()
             if run in runs_db:
                 print("This run is already in the database")
             else:
                 run_dict, lane_dict = data.import_data.laneHTML(run,path)
                 samples_dict = data.import_data.laneBarcodeHTML(run, path)
                 
-                engine = database.connection.engine()       
+                engine = connection.engine()       
                 
 #                metadata = MetaData()
 #                engine = create_engine("mysql+pymysql://"+config.MySQL_DB["username"]+":"+config.MySQL_DB["password"]+"@"+config.MySQL_DB["host"]+"/"+config.MySQL_DB["database"], echo=False)
@@ -43,14 +42,14 @@ def up_to_database(run, path, sequencer):
 #                Run_per_Lane = Table("Run_per_Lane",metadata,autoload=True,autoload_with=engine)
 #                Sample_Sequencer = Table("Sample_Sequencer",metadata,autoload=True,autoload_with=engine)
                 
-                sequencer_table = database.connection.sequencer_table(engine)
-                run_table = database.connection.run_table(engine)
-                run_lane_table = database.connection.run_per_lane_table(engine)
-                sample_sequencer_table = database.connection.sample_sequencer_table(engine)
+                sequencer_table = connection.sequencer_table(engine)
+                run_table = connection.run_table(engine)
+                run_lane_table = connection.run_per_lane_table(engine)
+                sample_sequencer_table = connection.sample_sequencer_table(engine)
                 
                 conn = engine.connect()
                 
-                seq_db = database.get.Sequencer()
+                seq_db = get.Sequencer()
                 seq_ID = 0            
                 if sequencer in seq_db:
                     seq_ID = seq_db[sequencer]

@@ -78,7 +78,7 @@ def laneHTML(run, path):
         return data_run, lane_dict
     
     except Exception, e:
-        print(repr(e))
+        print(e)
 
 def laneBarcodeHTML(run, path):
     """Retrieve data from the laneBarcode.html page, the data is per barcode/sample per lane"""
@@ -131,7 +131,7 @@ def laneBarcodeHTML(run, path):
         return samples_dict
 
     except Exception, e:
-        print(repr(e))
+        print(e)
 
 def vcf_file(run, path):
     """Retrieve data from a vcf file, for each sample the number of variants, homo- and heterozygous, number of dbSNP variants and PASS variants is determained"""
