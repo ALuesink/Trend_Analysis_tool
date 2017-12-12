@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
-"""get Runs, Sequencer, Bait Set and processed Runs from database"""
+"""get Runs, Sequencer, Bait Set and processed Runs from database
+"""
 
-# from sqlalchemy import create_engine, select, Table, MetaData
-import config
+from sqlalchemy import select
 import connection
 
 engine = connection.engine()
 
 
 def runs():
-    """Get Runs and Run ID's of runs already in the database"""
+    """Get Runs and Run ID's of runs already in the database
+    """
     conn = engine.connect()
     run = connection.run_table(engine)
 
@@ -24,7 +25,8 @@ def runs():
 
 
 def sequencer():
-    """Get Sequencer and Sequencer ID's of sequencers already in the database"""
+    """Get Sequencer and Sequencer ID's of sequencers already in the database
+    """
     conn = engine.connect()
     sequencer = connection.sequencer_table(engine)
 
@@ -39,7 +41,8 @@ def sequencer():
 
 
 def bait_set():
-    """Get Bait Set and Bait Set ID's of bait sets already in the database"""
+    """Get Bait Set and Bait Set ID's of bait sets already in the database
+    """
     conn = engine.connect()
     bait_set = connection.bait_set_table(engine)
 
@@ -54,7 +57,8 @@ def bait_set():
 
 
 def runs_processed():
-    """Get Runs which are already in the Sample Processed table"""
+    """Get Runs which are already in the Sample Processed table
+    """
     conn = engine.connect()
     sample_processed = connection.sample_processed_table(engine)
     run = connection.run_table(engine)
@@ -68,3 +72,25 @@ def runs_processed():
 
     conn.close()
     return run_processed_db
+   
+   
+def sample_run_processed():
+    """Get the combination of samples and their run id's from the Sample Processed table
+    """
+    conn = engine.connect()
+    sample_processed = connection.sample_processed_table(engine)
+    run = connection.run_table(engine)
+    
+    select_sample_run = select([sample_processed.c.Sample_name, run.c.Run]).\
+        where(sample_processed.c.Run_ID == run.c.Run_ID)
+    result_sample_run = conn.execute(select_sample_run).fetchall()
+    sample_run_db = {}
+    for sample in result_sample_run:
+        sample_run_db[sample[0]] = sample[1]
+        
+    conn.close()
+    return sample_run_db
+
+
+
+
