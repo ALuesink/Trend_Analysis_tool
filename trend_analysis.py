@@ -44,17 +44,26 @@ def delete_run_proc_data(args):
 
 
 # Delete + upload functions
-def update_sample_proc_data(args):
-    """Delete and then update processed sample data"""
-    scripts.delete.sample_processed.del_sampledata(args.run, args.samples)
-    scripts.upload.sample_processed.up_to_database(args.run, args.path, args.samples)
-
-
 def update_run_data(args):
-    """Delete and then update all run data"""
+    """Delete and then upload all run data
+    """
     scripts.delete.run_all.del_all_rundata(args.run)
     scripts.upload.raw_data.up_to_database(args.run, args.path_raw, args.sequencer)
     scripts.upload.run_processed.up_to_database(args.run, args.path_proc)
+    
+    
+def update_proc_run_data(args):
+    """Delete and then upload processed run data
+    """
+    scripts.delete.run_processed.del_runprocessed(args.run)
+    scripts.upload.run_processed.up_to_database(args.run, args.path)
+
+
+def update_sample_proc_data(args):
+    """Delete and then upload processed sample data
+    """
+    scripts.delete.sample_processed.del_sampledata(args.run, args.samples)
+    scripts.upload.sample_processed.up_to_database(args.run, args.path, args.samples)
 
 
 if __name__ == "__main__":
