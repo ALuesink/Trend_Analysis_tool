@@ -17,5 +17,7 @@ Data can be uploaded, deleted or updated.
 ### To upload data
 Raw data:
 ```
-python trend_analysis.py upload raw_data **run** **path** **sequencer**
+<pre>
+python trend_analysis.py upload raw_data <b>run path sequencer</b>
+</pre>
 ```
