@@ -1,1 +1,5 @@
-Hier komen requirements
+PyMySQL==0.7.11
+PyVCF==0.6.8
+SQLAlchemy==1.1.14
+python-dateutil==2.6.1
+
