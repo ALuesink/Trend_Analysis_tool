@@ -44,6 +44,7 @@ python trend_analysis.py delete run_proc 'run'
 Processed sample data:
 ```
 python trend_analysis.py delete sample_proc 'run' 'samples'
+```
 
 ### To update data
 Delete and then update all run data:
