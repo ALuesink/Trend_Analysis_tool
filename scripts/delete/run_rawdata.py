@@ -1,38 +1,36 @@
 # -*- coding: utf-8 -*-
-"""Delete raw run data from the database"""
+"""Delete raw run data from the database
+"""
 
-from sqlalchemy import create_engine, Table, MetaData
+from ..database import connection, get, set_run
 import warnings
-import config
 
-import database
 
 def del_run_rawdata(run):
     with warnings.catch_warnings():
         warnings.simplefilter("error")
         
         try:
-            metadata = MetaData()
-            engine = create_engine("mysql+pymysql://"+config.MySQL_DB["username"]+":"+config.MySQL_DB["password"]+"@"+config.MySQL_DB["host"]+"/"+config.MySQL_DB["database"], echo=False)      
-            
-            Run = Table("Run",metadata,autoload=True,autoload_with=engine)
-            Run_per_Lane = Table("Run_per_Lane",metadata,autoload=True,autoload_with=engine)
-            Sample_Sequencer = Table("Sample_Sequencer",metadata,autoload=True,autoload_with=engine)
-            
+            engine = connection.engine()
             conn = engine.connect()        
             
-            run_in_db = database.get.Runs()
+            run = connection.run_table(engine)
+            run_per_lane = connection.run_per_lane_table(engine)
+            sample_sequencer = connection.sample_sequencer_table(engine)
+            
+            run = set_run.set_run_name(run)
+            run_in_db = get.runs()
 
             if run in run_in_db:            
                 run_id = run_in_db[run]
                 
-                del_Run = Run.delete().where(Run.c.Run_ID == run_id)
-                del_Run_per_Lane = Run_per_Lane.delete().where(Run_per_Lane.c.Run_ID == run_id)
-                del_Sample_Sequencer = Sample_Sequencer.delete().where(Sample_Sequencer.c.Run_ID == run_id)           
+                del_run = run.delete().where(run.c.Run_ID == run_id)
+                del_run_per_lane = run_per_lane.delete().where(run_per_lane.c.Run_ID == run_id)
+                del_sample_sequencer = sample_sequencer.delete().where(sample_sequencer.c.Run_ID == run_id)           
                 
-                conn.execute(del_Run)
-                conn.execute(del_Run_per_Lane)
-                conn.execute(del_Sample_Sequencer)           
+                conn.execute(del_run)
+                conn.execute(del_run_per_lane)
+                conn.execute(del_sample_sequencer)           
             else:
                 print("This run is not in the database")
             

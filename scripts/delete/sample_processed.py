@@ -1,31 +1,31 @@
 # -*- coding: utf-8 -*-
-"""Delete processed samples from the database"""
+"""Delete processed samples from the database
+"""
 
-from sqlalchemy import create_engine, Table, MetaData
+from ..database import connection, get, set_run
 import warnings
-import config
 
-import database
 
 def del_sampledata(run, samples):
     with warnings.catch_warnings():
         warnings.simplefilter("error")
         
-        try:
-            metadata = MetaData()
-            engine = create_engine("mysql+pymysql://"+config.MySQL_DB["username"]+":"+config.MySQL_DB["password"]+"@"+config.MySQL_DB["host"]+"/"+config.MySQL_DB["database"], echo=False)
-            
-            Sample_Processed = Table("Sample_Processed", metadata, autoload=True, autoload_with=engine)
-            
+        try:          
+            engine = connection.engine()
             conn = engine.connect()
             
-            run_in_db = database.get.Runs()
+            sample_processed = connection.sample_processed_table(engine)
+            
+            run = set_run.set_run_name(run)
+            run_in_db = get.runs()
             
             if run in run_in_db:            
                 run_id = run_in_db[run]
                 for sample in samples:
-                    del_Sample = Sample_Processed.delete().where(Sample_Processed.c.Run_ID == run_id ).where(Sample_Processed.c.Sample_name == sample)
-                    conn.execute(del_Sample)
+                    del_sample = sample_processed.delete().\
+                        where(sample_processed.c.Run_ID == run_id ).\
+                        where(sample_processed.c.Sample_name == sample)
+                    conn.execute(del_sample)
             else:
                 print("This run is not in the database")
             

@@ -11,7 +11,7 @@ def up_to_database(run, path):
     with warnings.catch_warnings():
         warnings.simplefilter("error")
         try:
-            run_db = set_run.set_run_name(run)
+            run_core = set_run.set_run_name(run)
             runs_processed_db = get.runs_processed()
 
             if run in runs_processed_db:
@@ -32,7 +32,7 @@ def up_to_database(run, path):
                 bait_set = connection.bait_set_table(engine)
 
                 run_in_db = get.runs()
-                run_id = run_in_db[run_db]
+                run_id = run_in_db[run_core]
                 baitset_db = get.bait_set()
 
                 for sample in dict_samples:
