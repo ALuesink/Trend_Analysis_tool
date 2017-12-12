@@ -11,7 +11,7 @@ def up_to_database(run, path):
     with warnings.catch_warnings():
         warnings.simplefilter("error")
         try:
-            run = set_run.set_run_name(run)
+            run_db = set_run.set_run_name(run)
             runs_processed_db = get.runs_processed()
 
             if run in runs_processed_db:
@@ -32,8 +32,7 @@ def up_to_database(run, path):
                 bait_set = connection.bait_set_table(engine)
 
                 run_in_db = get.runs()
-                run_id = run_in_db[run]
-
+                run_id = run_in_db[run_db]
                 baitset_db = get.bait_set()
 
                 for sample in dict_samples:
@@ -54,7 +53,7 @@ def up_to_database(run, path):
                         con_bait_set = conn.execute(insert_bait_set)
                         bait_id = con_bait_set.inserted_primary_key
 
-                    insert_Sample = Sample_Processed.insert().values(
+                    insert_sample = sample_processed.insert().values(
                         Sample_name=sample, Total_number_of_reads=stats['Total_number_of_reads'],
                         Percentage_reads_mapped=stats['Percentage_reads_mapped'],
                         Total_reads=stats['Total_reads'], PF_reads=stats['PF_reads'],
@@ -83,7 +82,7 @@ def up_to_database(run, path):
                         GC_dropout=stats['GC_dropout'], Duplication=dup, Number_variants=vcf[0],
                         dbSNP_variants=vcf[1], PASS_variants=vcf[2], Run_ID=run_id, Bait_ID=bait_id)
 
-                    conn.execute(insert_Sample)
+                    conn.execute(insert_sample)
 
                 conn.close()
 
