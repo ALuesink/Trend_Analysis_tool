@@ -53,5 +53,5 @@ python trend_analysis.py update run_all 'run' 'path_raw' 'path_proc' 'sequencer'
 ```
 Delete and then update processed sample data:
 ```
-python trend_analysis.py update sample 'run' 'path' 'samples'
+python trend_analysis.py update sample __'run'__ 'path' 'samples'
 ```
