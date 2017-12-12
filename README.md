@@ -18,3 +18,4 @@ Data can be uploaded, deleted or updated.
 Raw data:
 '''
 python trend_analysis.py upload raw_data **run** **path** **sequencer**
+'''
