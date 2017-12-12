@@ -11,10 +11,15 @@ PyVCF
 ```
 
 ## Running the tool
-There are different options with this tool.
-Data can be uploaded, deleted or updated.
+There are different options with this tool.  
+Data can be uploaded, deleted or updated.  
+The raw run data is run data directly from the sequencer, while processed data comes from the pipeline. 
 
-### To upload data
+### Upload data
+Needed for data uploading is the run name, the path to the directory of the run and the sequencer.  
+For the raw run data the path needed is to the raw run directory, for the processed data to the processed data directory.  
+When not all samples of a run need to be uploaded, these samples need to be enter subsequently with the path to their processed run directory.  
+
 Raw run data:
 ```
 python trend_analysis.py upload raw_data 'run' 'path' 'sequencer'
@@ -28,7 +33,10 @@ Processed sample data:
 python trend_analysis.py upload sample_processed 'run' 'path' 'samples'
 ```
 
-### To delete data
+### Delete data
+To delete data from the database only the run name is needed.  
+When only certain samples need to be deleted, they need to be enter subsequently with their run name.  
+
 All run data:
 ```
 python trend_analysis.py delete run_all 'run'
@@ -46,12 +54,21 @@ Processed sample data:
 python trend_analysis.py delete sample_proc 'run' 'samples'
 ```
 
-### To update data
-Delete and then update all run data:
+### Update data
+When data in the datebase needs to be update the data will be delete first before the new data is added.  
+To update all data of a run, the run name, path to the raw data directory, path the processed data directory and the sequencer are needed.  
+When only the processed data of a run needs to be updated, the run name and the path to the processed data directory are nedded.  
+In order to update certain samples, the run name, the path to the procesed data and the samples need to be entered.  
+
+Delete and then upload new run data:
 ```
 python trend_analysis.py update run_all 'run' 'path_raw' 'path_proc' 'sequencer'
 ```
-Delete and then update processed sample data:
+Delete and then upload processed run data:
+```
+python trend_analysis.py update processed_data 'run'
+```
+Delete and then upload processed sample data:
 ```
 python trend_analysis.py update sample 'run' 'path' 'samples'
 ```
