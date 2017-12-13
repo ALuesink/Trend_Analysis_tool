@@ -78,8 +78,7 @@ if __name__ == "__main__":
     parser_upload_raw = subparser_upload.add_parser('raw_data', help='upload raw data to database')
     parser_upload_raw.add_argument('run', help='Run name')
     parser_upload_raw.add_argument('path', help='Path to run')
-#    parser_upload_raw.add_argument('sequencer', choices=['hiseq_umc01', 'nextseq_umc01', 'nextseq_umc02', 'novaseq_umc01'], help='Sequencer name')
-    parser_upload_raw.add_argument('sequencer', choices=config.Sequencer, help='Sequencer name')
+    parser_upload_raw.add_argument('sequencer', choices=config.Sequencers, help='Sequencer name')
     parser_upload_raw.set_defaults(func=upload_raw_data)
 
     parser_upload_processed = subparser_upload.add_parser('processed_data', help='upload processed data to database')
@@ -128,8 +127,7 @@ if __name__ == "__main__":
     parser_update_run.add_argument('run', help='Run name')
     parser_update_run.add_argument('path_raw', help='Path to raw run')
     parser_update_run.add_argument('path_proc', help='Path to processed run')
-#    parser_update_run.add_argument('sequencer', choices=['hiseq_umc01', 'nextseq_umc01', 'nextseq_umc02', 'novaseq_umc01'], help='Sequencer name')
-    parser_update_run.add_argument('sequencer', choices=config.Sequencer, help='Sequencer name')
+    parser_update_run.add_argument('sequencer', choices=config.Sequencers, help='Sequencer name')
     parser_update_run.set_defaults(func=update_run_data)
 
     args = parser.parse_args()
