@@ -12,38 +12,38 @@ def up_to_database(run, path, samples):
         try:
             run_core = set_run.set_run_name(run)
             sample_run_db = get.sample_run_processed()
-            
+
             samples_db = []
             for sample in samples:
                 if sample in sample_run_db:
                     run_db = sample_run_db[sample]
                     if run == run_db:
                         samples_db.append(sample)
-            
-            list_samples = list(set(samples) - set(samples_db))            
-            
+
+            list_samples = list(set(samples) - set(samples_db))
+
             if len(list_samples) > 0:
                 sample_vcf = data.import_data.vcf_file(run, path)                   # dictionary: keys are sample names, values are vcf stats
                 sample_dup = data.import_data.runstat_file(run, path)               # dictionary: keys are sample names, values percentage duplication
                 dict_samples = data.import_data.HSMetrics(run, path)                # dictionary: keys are sample names, values are HSMetrics/Picard stats
-    
+
                 engine = connection.engine()
                 conn = engine.connect()
-    
+
                 sample_processed = connection.sample_processed_table(engine)
                 bait_set = connection.bait_set_table(engine)
-    
+
                 run_in_db = get.runs()
                 run_id = run_in_db[run_core]
-    
+
                 baitset_db = get.bait_set()
-    
+
                 for sample in samples:
                     bait_id = 0
                     vcf = sample_vcf[sample]
                     dup = sample_dup[sample]
                     stats = dict_samples[sample]
-    
+
                     if stats['Bait_name'] in baitset_db:
                         bait_id = baitset_db[stats['Bait_name']]
                     else:
@@ -52,17 +52,16 @@ def up_to_database(run, path, samples):
                             Bait_territory=stats['Bait_territory'],
                             Target_territory=stats['Target_territory'],
                             Bait_design_efficiency=stats['Bait_design_efficiency'])
-        
+
                         con_bait_set = conn.execute(insert_bait_set)
                         bait_id = con_bait_set.inserted_primary_key
-                        
+
                         if Warning:
                             delete = bait_set.delete().where(bait_set.c.Bait_ID == bait_id)
                             conn.execute(delete)
                             sys.stdout.write("Data deleted from database \n")
                             sys.exit()
 
-        
                     insert_sample = sample_processed.insert().values(
                         Sample_name=sample, Total_number_of_reads=stats['Total_number_of_reads'],
                         Percentage_reads_mapped=stats['Percentage_reads_mapped'],
@@ -91,16 +90,15 @@ def up_to_database(run, path, samples):
                         HS_penalty_100X=stats['HS_penalty_100X'], AT_dropout=stats['AT_dropout'],
                         GC_dropout=stats['GC_dropout'], Duplication=dup, Number_variants=vcf[0],
                         dbSNP_variants=vcf[1], PASS_variants=vcf[2], Run_ID=run_id, Bait_ID=bait_id)
-        
+
                     insert = conn.execute(insert_sample)
                     insert_ID = insert.inserted_primary_key
-                    
+
                     if Warning:
                         delete = sample_processed.delete().where(sample_processed.c.Sample_Proc_ID == insert_ID)
                         conn.execute(delete)
                         sys.stdout.write("Data deleted from database \n")
                         sys.exit()
-
 
                 conn.close()
 

@@ -12,18 +12,18 @@ def runs():
     """Get Runs and Run ID's of runs already in the database
     """
     run_in_db = {}
-    
+
     conn = engine.connect()
     run = connection.run_table(engine)
 
     select_run = select([run.c.Run, run.c.Run_ID])
     result_run = conn.execute(select_run).fetchall()
-    
+
     for run in result_run:
         run_in_db[run[0]] = run[1]
 
     conn.close()
-    
+
     return run_in_db
 
 
@@ -42,7 +42,7 @@ def sequencer():
         seq_in_db[seq[0]] = seq[1]
 
     conn.close()
-    
+
     return seq_in_db
 
 
@@ -61,7 +61,7 @@ def bait_set():
         baitset_in_db[baitset[1]] = baitset[0]
 
     conn.close()
-    
+
     return baitset_in_db
 
 
@@ -69,7 +69,7 @@ def runs_processed():
     """Get Runs which are already in the Sample Processed table
     """
     run_processed_db = set()
-    
+
     conn = engine.connect()
     sample_processed = connection.sample_processed_table(engine)
     run = connection.run_table(engine)
@@ -77,35 +77,31 @@ def runs_processed():
     select_run_processed = select([run.c.Run]).\
         where(sample_processed.c.Run_ID == run.c.Run_ID)
     result_run_processed = conn.execute(select_run_processed).fetchall()
-    
+
     for run in result_run_processed:
         run_processed_db.add(run[0])
 
     conn.close()
-    
+
     return run_processed_db
-   
-   
+
+
 def sample_run_processed():
     """Get the combination of samples and their run id's from the Sample Processed table
     """
     sample_run_db = {}
-    
+
     conn = engine.connect()
     sample_processed = connection.sample_processed_table(engine)
     run = connection.run_table(engine)
-    
+
     select_sample_run = select([sample_processed.c.Sample_name, run.c.Run]).\
         where(sample_processed.c.Run_ID == run.c.Run_ID)
     result_sample_run = conn.execute(select_sample_run).fetchall()
-    
+
     for sample in result_sample_run:
         sample_run_db[sample[0]] = sample[1]
-        
+
     conn.close()
-    
+
     return sample_run_db
-
-
-
-

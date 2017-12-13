@@ -18,7 +18,7 @@ def up_to_database(run, path, sequencer):
 
             if run in runs_db:
                 sys.stdout.write("This run is already in the database \n")
-            else:                             
+            else:
                 run_dict, lane_dict = data.import_data.laneHTML(run, path)
                 samples_dict = data.import_data.laneBarcodeHTML(run, path)
 
@@ -30,17 +30,15 @@ def up_to_database(run, path, sequencer):
                 run_lane = connection.run_per_lane_table(engine)
                 sample_sequencer = connection.sample_sequencer_table(engine)
 
-
                 seq_ID = 0
                 seq_db = get.sequencer()
-                
+
                 if sequencer in seq_db:
                     seq_ID = seq_db[sequencer]
                 else:
                     insert_seq = sequencer_table.insert().values(Name=sequencer)
                     con_seq = conn.execute(insert_seq)
                     seq_ID = con_seq.inserted_primary_key
-
 
                 insert_run = run_table.insert().values(
                     Run=str(run), Cluster_Raw=run_dict['Cluster_Raw'],
@@ -51,7 +49,7 @@ def up_to_database(run, path, sequencer):
 
                 con_run = conn.execute(insert_run)
                 run_ID = con_run.inserted_primary_key
-                
+
                 if Warning:
                     delete = run_table.delete().where(run_table.c.Run_ID == run_ID)
                     conn.execute(delete)
@@ -61,41 +59,40 @@ def up_to_database(run, path, sequencer):
 
                 for lane in lane_dict:
                     insert_lane = run_lane.insert().values(
-                        Lane=str(lane_dict[lane]['Lane']), 
+                        Lane=str(lane_dict[lane]['Lane']),
                         PF_Clusters=lane_dict[lane]['PF_Clusters'],
-                        PCT_of_lane=lane_dict[lane]['PCT_of_lane'], 
+                        PCT_of_lane=lane_dict[lane]['PCT_of_lane'],
                         PCT_perfect_barcode=lane_dict[lane]['PCT_perfect_barcode'],
                         PCT_one_mismatch_barcode=lane_dict[lane]['PCT_one_mismatch_barcode'],
-                        Yield_Mbases=lane_dict[lane]['Yield_Mbases'], 
+                        Yield_Mbases=lane_dict[lane]['Yield_Mbases'],
                         PCT_PF_Clusters=lane_dict[lane]['PCT_PF_Clusters'],
                         PCT_Q30_bases=lane_dict[lane]['PCT_Q30_bases'],
-                        Mean_Quality_Score=lane_dict[lane]['Mean_Quality_Score'], 
+                        Mean_Quality_Score=lane_dict[lane]['Mean_Quality_Score'],
                         Run_ID=run_ID)
 
                     insert = conn.execute(insert_lane)
                     insert_ID = insert.inserted_primary_key
-                    
+
                     if Warning:
                         delete = run_lane.delete().where(run_lane.c.Run_Lane_ID == insert_ID)
                         conn.execute(delete)
                         sys.stdout.write("Data deleted from database \n")
                         sys.exit()
 
-
                 for sample in samples_dict:
                     insert_sample = sample_sequencer.insert().values(
-                        Lane=str(samples_dict[sample]['Lane']), 
+                        Lane=str(samples_dict[sample]['Lane']),
                         Project=samples_dict[sample]['Project'].upper(),
-                        Sample_name=samples_dict[sample]['Sample_name'], 
+                        Sample_name=samples_dict[sample]['Sample_name'],
                         Barcode_sequence=samples_dict[sample]['Barcode_sequence'],
-                        PF_Clusters=samples_dict[sample]['PF_Clusters'], 
+                        PF_Clusters=samples_dict[sample]['PF_Clusters'],
                         PCT_of_lane=samples_dict[sample]['PCT_of_lane'],
                         PCT_perfect_barcode=samples_dict[sample]['PCT_perfect_barcode'],
                         PCT_one_mismatch_barcode=samples_dict[sample]['PCT_one_mismatch_barcode'],
-                        Yield_Mbases=samples_dict[sample]['Yield_Mbases'], 
+                        Yield_Mbases=samples_dict[sample]['Yield_Mbases'],
                         PCT_PF_Clusters=samples_dict[sample]['PCT_PF_Clusters'],
                         PCT_Q30_bases=samples_dict[sample]['PCT_Q30_bases'],
-                        Mean_Quality_Score=samples_dict[sample]['Mean_Quality_Score'], 
+                        Mean_Quality_Score=samples_dict[sample]['Mean_Quality_Score'],
                         Run_ID=run_ID)
 
                     insert = conn.execute(insert_sample)
@@ -105,7 +102,6 @@ def up_to_database(run, path, sequencer):
                         conn.execute(delete)
                         sys.stdout.write("Data deleted from database \n")
                         sys.exit()
-
 
                 conn.close()
         except Exception, e:
