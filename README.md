@@ -85,7 +85,7 @@ At the same time, when there are quality parameters added to one of the files, t
 #### New parameters
 * Python scripts:
 
-...import_data: add the parameter to the corresponding dictionary
-...upload/file: add the parameter to the insert
+  * import_data: add the parameter to the corresponding dictionary
+  * upload/file: add the parameter to the insert
 
 * MySQL database: add the parameter to the corresponding table
