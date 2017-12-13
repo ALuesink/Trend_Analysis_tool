@@ -72,3 +72,18 @@ Delete and then upload processed sample data:
 ```
 python trend_analysis.py update sample 'run' 'path' 'samples'
 ```
+
+## Updating the tool
+There are multiple scenarios where the codes need to be changed.  
+When a new sequencer will be used, this sequencer needs to be added to the script.  
+At the same time, when there are quality parameters added to one of the files, these new parameters also need to be added to the script.  
+
+#### New sequencer
+..* config.py: add the new sequencer to the list Sequencers
+..* R-script: add the new sequencer with a corresponding colour and shape
+
+#### New parameters
+..* Python scripts:
+...import_data: add the parameter to the corresponding dictionary
+...upload/file: add the parameter to the insert
+..* MySQL database: add the parameter to the corresponding table
