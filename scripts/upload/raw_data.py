@@ -4,6 +4,7 @@
 
 from ..database import connection, get, set_run
 import warnings
+import sys
 import data
 
 
@@ -54,7 +55,7 @@ def up_to_database(run, path, sequencer):
                 run_ID = con_run.inserted_primary_key
                 
                 if Warning:
-                    delete = run_table.delete().where(run_table.c.Run_ID = run_ID)
+                    delete = run_table.delete().where(run_table.c.Run_ID == run_ID)
                     conn.execute(delete)
                     sys.stdout.write("Data deleted from database \n")
                     sys.exit()
@@ -76,7 +77,7 @@ def up_to_database(run, path, sequencer):
                     insert_ID = insert.inserted_primary_key
                     
                     if Warning:
-                        delete = run_lane.delete().where(run_lane.c.Run_Lane_ID = ID)
+                        delete = run_lane.delete().where(run_lane.c.Run_Lane_ID == ID)
                         conn.execute(delete)
                         sys.stdout.write("Data deleted from database \n")
                         sys.exit()
@@ -100,7 +101,7 @@ def up_to_database(run, path, sequencer):
                     insert = conn.execute(insert_sample)
                     insert_ID = insert.inserted_primary_key
                     if Warning:
-                        delete = sample_sequencer.delete().where(sample_sequencer.c.Sample_Seq_ID = insert_ID)
+                        delete = sample_sequencer.delete().where(sample_sequencer.c.Sample_Seq_ID == insert_ID)
                         conn.execute(delete)
                         sys.stdout.write("Data deleted from database \n")
                         sys.exit()

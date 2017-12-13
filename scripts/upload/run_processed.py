@@ -4,6 +4,7 @@
 
 from ..database import connection, get, set_run
 import warnings
+import sys
 import data
 
 
@@ -54,7 +55,7 @@ def up_to_database(run, path):
                         bait_id = con_bait_set.inserted_primary_key
                         
                         if Warning:
-                            delete = bait_set.delete().where(bait_set.c.Bait_ID = bait_id)
+                            delete = bait_set.delete().where(bait_set.c.Bait_ID == bait_id)
                             conn.execute(delete)
                             sys.stdout.write("Data deleted from database \n")
                             sys.exit()
@@ -92,7 +93,7 @@ def up_to_database(run, path):
                     insert_ID = insert.inserted_primary_key
                     
                     if Warning:
-                        delete = sample_processed.delete().where(sample_processed.c.Sample_Proc_ID = insert_ID)
+                        delete = sample_processed.delete().where(sample_processed.c.Sample_Proc_ID == insert_ID)
                         conn.execute(delete)
                         sys.stdout.write("Data deleted from database \n")
                         sys.exit()
