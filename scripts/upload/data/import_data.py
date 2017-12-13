@@ -38,7 +38,10 @@ def laneHTML(run, path):
         d = datetime.strptime(date, "%Y-%m-%d")
         as_date = (d-epoch).days
 
-        lanehtml = commands.getoutput("find "+ str(path) + "/" + str(run) +"/Data/Intensities/BaseCalls/Reports/html/*/all/all/all/ -iname \"lane.html\"")
+        lanehtml = commands.getoutput("find {path}/{run}/Data/Intensities/BaseCalls/Reports/html/*/all/all/all/ -iname \"lane.html\"".format(
+            path=str(path),
+            run=str(run)
+            ), echo=False)
 
         with open(lanehtml, "r") as lane:
             data_run = {}
