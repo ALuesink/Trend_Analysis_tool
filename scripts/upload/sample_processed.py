@@ -9,7 +9,6 @@ import sys
 
 def up_to_database(run, path, samples):
     with warnings.catch_warnings():
-        warnings.simplefilter("error")
         try:
             run_core = set_run.set_run_name(run)
             sample_run_db = get.sample_run_processed()
@@ -104,6 +103,9 @@ def up_to_database(run, path, samples):
 
 
                 conn.close()
+
+            else:
+                sys.stdout.write("These samples are already in the database \n")
 
         except Exception, e:
             print(repr(e))

@@ -12,16 +12,12 @@ def up_to_database(run, path, sequencer):
     """Get data of inserted run and upload the data to the database
     """
     with warnings.catch_warnings():
-#        warnings.simplefilter("error")
-#        print("run: " + run)
-#        print("path: " + path)
-#        print("sequencer: " + sequencer)
         try:
             run = set_run.set_run_name(run)
             runs_db = get.runs()
 
             if run in runs_db:
-                print("This run is already in the database")
+                sys.stdout.write("This run is already in the database \n")
             else:
                 run_dict, lane_dict = data.import_data.laneHTML(run, path)
                 samples_dict = data.import_data.laneBarcodeHTML(run, path)

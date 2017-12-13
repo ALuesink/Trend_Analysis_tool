@@ -10,21 +10,16 @@ import data
 
 def up_to_database(run, path):
     with warnings.catch_warnings():
-        warnings.simplefilter("error")
         try:
             run_core = set_run.set_run_name(run)
             runs_processed_db = get.runs_processed()
 
             if run in runs_processed_db:
-                print("This run is already in the database")
+                sys.stdout.write("This run is already in the database /n")
             else:
-                print("start vcf")
                 sample_vcf = data.import_data.vcf_file(run, path)                   # dictionary: keys are sample names, values are vcf stats
-                print('start dup')
                 sample_dup = data.import_data.runstat_file(run, path)               # dictionary: keys are sample names, values percentage duplication
-                print('start HSMetrics')
                 dict_samples = data.import_data.HSMetrics(run, path)                # dictionary: keys are sample names, values are HSMetrics/Picard stats
-                print('start uploaden')
 
                 engine = connection.engine()
                 conn = engine.connect()

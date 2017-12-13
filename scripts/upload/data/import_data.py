@@ -103,7 +103,10 @@ def laneBarcodeHTML(run, path):
         'Mean_Quality_Score' : {'column': 'Mean Quality Score'}
         }
 
-        samplehtml = commands.getoutput("find " + str(path) + "/"  + str(run) + "/Data/Intensities/BaseCalls/Reports/html/*/all/all/all/ -iname \"laneBarcode.html\"")
+        samplehtml = commands.getoutput("find {path}/{run}/Data/Intensities/BaseCalls/Reports/html/*/all/all/all/ -iname \"laneBarcode.html\"".format(
+            path=str(path),
+            run=str(run)
+            ), echo=False)
 
         with open(samplehtml, "r") as sample:
             html = sample.read()
@@ -141,7 +144,10 @@ def vcf_file(run, path):
     """
     try:
         dic_samples = {}
-        file_vcf = commands.getoutput("find " + str(path) + "/"  + str(run) + "/ -maxdepth 1 -iname \"*.filtered_variants.vcf\"")
+        file_vcf = commands.getoutput("find {path}/{run}/ -maxdepth 1 -iname \".filtered_variants.vcf\"".format(
+            path=str(path),
+            run=str(run)
+            ), echo=False)
 
         with open(file_vcf, "r") as vcffile:
             vcf_file = vcf.Reader(vcffile)
@@ -186,7 +192,10 @@ def runstat_file(run, path):
     """
     try:
         sample_dup = {}
-        runstats_file = commands.getoutput("find " + str(path) + "/"  + str(run) + "/ -iname \"run_stats.txt\"")
+        runstats_file = commands.getoutput("find {path}/{run}/ -iname \"run_stats.txt\"".format(
+            path=str(path),
+            run=str(run)
+            ), echo=False)
 
         with open(runstats_file, "r") as runstats:
             run_stats = runstats.read()
@@ -217,7 +226,10 @@ def HSMetrics(run, path):
     """
     try:
         sample_stats = {}
-        QCStats_file = commands.getoutput("find " + str(path) + "/"  + str(run) + "/QCStats/ -iname \"HSMetrics_summary.transposed.txt\"")
+        QCStats_file = commands.getoutput("find {path}/{run}/QCStats/ -iname \"HSMetrics_summary.transposed.txt\"".format(
+            path=str(path),
+            run=str(run)
+            ), echo=False)
 
         dict_columns = {
                 'Sample_name':{'column': 'Sample'},
@@ -268,6 +280,15 @@ def HSMetrics(run, path):
                 'Bait_design_efficiency': {'column': 'BAIT_DESIGN_EFFICIENCY'}
         }
 
+        col_to_pct = ["Bait_design_efficiency", "PCT_PF_reads","PCT_PF_UQ_reads", "PCT_PF_UQ_reads_aligned", 
+                      "PCT_selected_bases", "PCT_off_bait","On_bait_vs_selected", "PCT_usable_bases_on_bait", 
+                      "PCT_usable_bases_on_target", "Zero_CVG_targets_PCT", "PCT_target_bases_2X", 
+                      "PCT_target_bases_10X", "PCT_target_bases_20X", "PCT_target_bases_30X", 
+                      "PCT_target_bases_40X", "PCT_target_bases_50X", "PCT_target_bases_100X"]
+        col_format = ["Mean_bait_coverage", "Mean_target_coverage", "Fold_enrichment", "Fold_80_base_penalty", 
+                      "HS_penalty_10X", "HS_penalty_20X", "HS_penalty_30X", "HS_penalty_40X", "HS_penalty_50X", 
+                      "HS_penalty_100X", "AT_dropout", "GC_dropout"]
+
         with open(QCStats_file, "r") as QCStats:
             sample = []
             qc_stats = QCStats.read().split("\n")
@@ -296,12 +317,12 @@ def HSMetrics(run, path):
                         stat = stats[dict_columns[col]['index']]
                         stat = float(stat.strip("%"))
                         data_dict[col] = stat
-                    elif col in ["Bait_design_efficiency","PCT_PF_reads","PCT_PF_UQ_reads","PCT_PF_UQ_reads_aligned","PCT_selected_bases","PCT_off_bait","On_bait_vs_selected","PCT_usable_bases_on_bait","PCT_usable_bases_on_target", "Zero_CVG_targets_PCT","PCT_target_bases_2X","PCT_target_bases_10X","PCT_target_bases_20X","PCT_target_bases_30X","PCT_target_bases_40X","PCT_target_bases_50X","PCT_target_bases_100X"]:
+                    elif col in col_to_pct:
                         stat = stats[dict_columns[col]['index']]
                         stat = float(stat)*100
                         stat = float("{0:.2f}".format(stat))
                         data_dict[col] = stat
-                    elif col in ["Mean_bait_coverage","Mean_target_coverage","Fold_enrichment","Fold_80_base_penalty","HS_penalty_10X","HS_penalty_20X","HS_penalty_30X","HS_penalty_40X","HS_penalty_50X","HS_penalty_100X","AT_dropout","GC_dropout"]:
+                    elif col in col_format:
                         stat = float(stats[dict_columns[col]['index']])
                         stat = float("{0:.2f}".format(stat))
                         data_dict[col] = stat
