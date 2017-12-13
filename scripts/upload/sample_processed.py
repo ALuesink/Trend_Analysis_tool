@@ -55,6 +55,13 @@ def up_to_database(run, path, samples):
         
                         con_bait_set = conn.execute(insert_bait_set)
                         bait_id = con_bait_set.inserted_primary_key
+                        
+                        if Warning:
+                            delete = bait_set.delete().where(bait_set.c.Bait_ID = bait_id)
+                            conn.execute(delete)
+                            sys.stdout.write("Data deleted from database \n")
+                            sys.exit()
+
         
                     insert_sample = sample_processed.insert().values(
                         Sample_name=sample, Total_number_of_reads=stats['Total_number_of_reads'],
@@ -85,7 +92,15 @@ def up_to_database(run, path, samples):
                         GC_dropout=stats['GC_dropout'], Duplication=dup, Number_variants=vcf[0],
                         dbSNP_variants=vcf[1], PASS_variants=vcf[2], Run_ID=run_id, Bait_ID=bait_id)
         
-                    conn.execute(insert_sample)
+                    insert = conn.execute(insert_sample)
+                    insert_ID = insert.inserted_primary_key
+                    
+                    if Warning:
+                        delete = sample_processed.delete().where(sample_processed.c.Sample_Proc_ID = insert_ID)
+                        conn.execute(delete)
+                        sys.stdout.write("Data deleted from database \n")
+                        sys.exit()
+
 
                 conn.close()
 
