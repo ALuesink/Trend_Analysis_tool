@@ -11,16 +11,17 @@ def del_runprocessed(run):
         warnings.simplefilter("error")
         
         try:           
+            run = set_run.set_run_name(run)
+            
             engine = connection.engine()
             conn = engine.connect()
             
             sample_processed = connection.sample_processed_table(engine)
             
-            run = set_run.set_run_name(run)
-            run_in_db = get.runs()
+            runs_in_db = get.runs()
             
-            if run in run_in_db:            
-                run_id = run_in_db[run]
+            if run in runs_in_db:            
+                run_id = runs_in_db[run]
                 
                 del_run = sample_processed.delete().where(sample_processed.c.Run_ID == run_id)
                 conn.execute(del_run)
@@ -30,4 +31,4 @@ def del_runprocessed(run):
             conn.close()
             
         except Exception, e:
-            print(repr(e))
+            print(e)

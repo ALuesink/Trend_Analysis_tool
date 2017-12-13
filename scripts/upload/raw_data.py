@@ -18,27 +18,29 @@ def up_to_database(run, path, sequencer):
 
             if run in runs_db:
                 sys.stdout.write("This run is already in the database \n")
-            else:
+            else:                             
                 run_dict, lane_dict = data.import_data.laneHTML(run, path)
                 samples_dict = data.import_data.laneBarcodeHTML(run, path)
 
                 engine = connection.engine()
+                conn = engine.connect()
 
                 sequencer_table = connection.sequencer_table(engine)
                 run_table = connection.run_table(engine)
                 run_lane = connection.run_per_lane_table(engine)
                 sample_sequencer = connection.sample_sequencer_table(engine)
 
-                conn = engine.connect()
 
-                seq_db = get.sequencer()
                 seq_ID = 0
+                seq_db = get.sequencer()
+                
                 if sequencer in seq_db:
                     seq_ID = seq_db[sequencer]
                 else:
                     insert_seq = sequencer_table.insert().values(Name=sequencer)
                     con_seq = conn.execute(insert_seq)
                     seq_ID = con_seq.inserted_primary_key
+
 
                 insert_run = run_table.insert().values(
                     Run=str(run), Cluster_Raw=run_dict['Cluster_Raw'],
@@ -55,6 +57,7 @@ def up_to_database(run, path, sequencer):
                     conn.execute(delete)
                     sys.stdout.write("Data deleted from database \n")
                     sys.exit()
+
 
                 for lane in lane_dict:
                     insert_lane = run_lane.insert().values(
@@ -73,10 +76,11 @@ def up_to_database(run, path, sequencer):
                     insert_ID = insert.inserted_primary_key
                     
                     if Warning:
-                        delete = run_lane.delete().where(run_lane.c.Run_Lane_ID == ID)
+                        delete = run_lane.delete().where(run_lane.c.Run_Lane_ID == insert_ID)
                         conn.execute(delete)
                         sys.stdout.write("Data deleted from database \n")
                         sys.exit()
+
 
                 for sample in samples_dict:
                     insert_sample = sample_sequencer.insert().values(
@@ -101,6 +105,7 @@ def up_to_database(run, path, sequencer):
                         conn.execute(delete)
                         sys.stdout.write("Data deleted from database \n")
                         sys.exit()
+
 
                 conn.close()
         except Exception, e:

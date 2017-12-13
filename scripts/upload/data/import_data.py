@@ -13,6 +13,7 @@ def laneHTML(run, path):
     """
     try:
         lane_dict = {}
+        data_run = {}
         epoch = datetime.utcfromtimestamp(0)
 
         dict_run = {
@@ -44,11 +45,10 @@ def laneHTML(run, path):
             ), echo=False)
 
         with open(lanehtml, "r") as lane:
-            data_run = {}
             html = lane.read()
             tableParser = HTMLTableParser()
             tableParser.feed(html)
-            tables = tableParser.tables                         #tables[1]==run tables[2]==lane
+            tables = tableParser.tables                         # tables[1]==run tables[2]==lane
 
             header_run = tables[1][0]
             header_lane = tables[2][0]
