@@ -8,6 +8,7 @@ from utils import convert_numbers
 import commands
 import vcf
 
+
 def laneHTML(run, path):
     """Retrieve data from the lane.html page, the data is the general run data and date per lane
     """
@@ -17,21 +18,21 @@ def laneHTML(run, path):
         epoch = datetime.utcfromtimestamp(0)
 
         dict_run = {
-        'Cluster_Raw' : {'column': 'Clusters (Raw)'},
-        'Cluster_PF' : {'column': 'Clusters(PF)'},
-        'Yield_Mbases' : {'column': 'Yield (MBases)'}
+            'Cluster_Raw': {'column': 'Clusters (Raw)'},
+            'Cluster_PF': {'column': 'Clusters(PF)'},
+            'Yield_Mbases': {'column': 'Yield (MBases)'}
         }
 
         dict_lane = {
-        'Lane' : {'column': 'Lane'},
-        'PF_Clusters' : {'column': 'PF Clusters'},
-        'PCT_of_lane' : {'column': '% of the lane'},
-        'PCT_perfect_barcode' : {'column': '% Perfect barcode'},
-        'PCT_one_mismatch_barcode' : {'column': '% One mismatch barcode'},
-        'Yield_Mbases' : {'column': 'Yield (Mbases)'},
-        'PCT_PF_Clusters' : {'column': '% PF Clusters'},
-        'PCT_Q30_bases' : {'column': '% = Q30 bases'},
-        'Mean_Quality_Score' : {'column': 'Mean Quality Score'}
+            'Lane': {'column': 'Lane'},
+            'PF_Clusters': {'column': 'PF Clusters'},
+            'PCT_of_lane': {'column': '% of the lane'},
+            'PCT_perfect_barcode': {'column': '% Perfect barcode'},
+            'PCT_one_mismatch_barcode': {'column': '% One mismatch barcode'},
+            'Yield_Mbases': {'column': 'Yield (Mbases)'},
+            'PCT_PF_Clusters': {'column': '% PF Clusters'},
+            'PCT_Q30_bases': {'column': '% = Q30 bases'},
+            'Mean_Quality_Score': {'column': 'Mean Quality Score'}
         }
 
         date = run.split("_")[0]
@@ -59,7 +60,6 @@ def laneHTML(run, path):
             for col in dict_lane:
                 dict_lane[col]['index'] = header_lane.index(dict_lane[col]['column'])
 
-
             stats_run = tables[1][1]
             stats_run = [convert_numbers(item.replace(",", "")) for item in stats_run]
             for col in dict_run:
@@ -85,6 +85,7 @@ def laneHTML(run, path):
     except Exception, e:
         print(e)
 
+
 def laneBarcodeHTML(run, path):
     """Retrieve data from the laneBarcode.html page, the data is per barcode/sample per lane
     """
@@ -92,18 +93,18 @@ def laneBarcodeHTML(run, path):
         samples_dict = {}
 
         dict_samples = {
-        'Lane' : {'column': 'Lane'},
-        'Project': {'column': 'Project'},
-        'Sample_name': {'column': 'Sample'},
-        'Barcode_sequence': {'column': 'Barcode sequence'},
-        'PF_Clusters' : {'column': 'PF Clusters'},
-        'PCT_of_lane' : {'column': '% of the lane'},
-        'PCT_perfect_barcode' : {'column': '% Perfect barcode'},
-        'PCT_one_mismatch_barcode' : {'column': '% One mismatch barcode'},
-        'Yield_Mbases' : {'column': 'Yield (Mbases)'},
-        'PCT_PF_Clusters' : {'column': '% PF Clusters'},
-        'PCT_Q30_bases' : {'column': '% = Q30 bases'},
-        'Mean_Quality_Score' : {'column': 'Mean Quality Score'}
+            'Lane': {'column': 'Lane'},
+            'Project': {'column': 'Project'},
+            'Sample_name': {'column': 'Sample'},
+            'Barcode_sequence': {'column': 'Barcode sequence'},
+            'PF_Clusters': {'column': 'PF Clusters'},
+            'PCT_of_lane': {'column': '% of the lane'},
+            'PCT_perfect_barcode': {'column': '% Perfect barcode'},
+            'PCT_one_mismatch_barcode': {'column': '% One mismatch barcode'},
+            'Yield_Mbases': {'column': 'Yield (Mbases)'},
+            'PCT_PF_Clusters': {'column': '% PF Clusters'},
+            'PCT_Q30_bases': {'column': '% = Q30 bases'},
+            'Mean_Quality_Score': {'column': 'Mean Quality Score'}
         }
 
         samplehtml = commands.getoutput("find {path}/{run}/Data/Intensities/BaseCalls/Reports/html/*/all/all/all/ -iname \"laneBarcode.html\"".format(
@@ -115,7 +116,7 @@ def laneBarcodeHTML(run, path):
             html = sample.read()
             tableParser = HTMLTableParser()
             tableParser.feed(html)
-            tables = tableParser.tables                         #tables[1]==run tables[2]==sample
+            tables = tableParser.tables                         # tables[1]==run tables[2]==sample
 
             header_samplehtml = tables[2][0]
 
@@ -125,7 +126,7 @@ def laneBarcodeHTML(run, path):
             for sample_lane in tables[2][1:]:
                 data_sample_lane = {}
                 if sample_lane[header_samplehtml.index('Project')].upper() != "DEFAULT":
-                    stats = [convert_numbers(item.replace(",","")) for item in sample_lane]
+                    stats = [convert_numbers(item.replace(",", "")) for item in sample_lane]
 
                     lane = stats[header_samplehtml.index('Lane')]
                     sample = stats[header_samplehtml.index('Sample')]
@@ -142,8 +143,10 @@ def laneBarcodeHTML(run, path):
     except Exception, e:
         print(e)
 
+
 def vcf_file(run, path):
-    """Retrieve data from a vcf file, for each sample the number of variants, homo- and heterozygous, number of dbSNP variants and PASS variants is determained
+    """Retrieve data from a vcf file, for each sample the number of variants,
+    homo- and heterozygous, number of dbSNP variants and PASS variants is determained
     """
     try:
         dic_samples = {}
@@ -156,7 +159,7 @@ def vcf_file(run, path):
             vcf_file = vcf.Reader(vcffile)
             list_samples = vcf_file.samples
             for sample in list_samples:
-                dic_samples[sample] = [0,0,0]
+                dic_samples[sample] = [0, 0, 0]
             for variant in vcf_file:
                 samples = []
                 if "DB"in variant.INFO:
@@ -224,6 +227,7 @@ def runstat_file(run, path):
     except Exception, e:
         print(e)
 
+
 def HSMetrics(run, path):
     """Retrieve data from the HSMetrics_summary.transposed file, from this file all the data is transferred to a dictionary
     """
@@ -235,7 +239,7 @@ def HSMetrics(run, path):
             ), echo=False)
 
         dict_columns = {
-                'Sample_name':{'column': 'Sample'},
+                'Sample_name': {'column': 'Sample'},
                 'Total_number_of_reads': {'column': 'Total_number_of_reads'},
                 'Percentage_reads_mapped': {'column': 'Percentage_reads_mapped'},
                 'Total_reads': {'column': 'TOTAL_READS'},
@@ -283,13 +287,13 @@ def HSMetrics(run, path):
                 'Bait_design_efficiency': {'column': 'BAIT_DESIGN_EFFICIENCY'}
         }
 
-        col_to_pct = ["Bait_design_efficiency", "PCT_PF_reads","PCT_PF_UQ_reads", "PCT_PF_UQ_reads_aligned", 
-                      "PCT_selected_bases", "PCT_off_bait","On_bait_vs_selected", "PCT_usable_bases_on_bait", 
-                      "PCT_usable_bases_on_target", "Zero_CVG_targets_PCT", "PCT_target_bases_2X", 
-                      "PCT_target_bases_10X", "PCT_target_bases_20X", "PCT_target_bases_30X", 
+        col_to_pct = ["Bait_design_efficiency", "PCT_PF_reads", "PCT_PF_UQ_reads", "PCT_PF_UQ_reads_aligned",
+                      "PCT_selected_bases", "PCT_off_bait", "On_bait_vs_selected", "PCT_usable_bases_on_bait",
+                      "PCT_usable_bases_on_target", "Zero_CVG_targets_PCT", "PCT_target_bases_2X",
+                      "PCT_target_bases_10X", "PCT_target_bases_20X", "PCT_target_bases_30X",
                       "PCT_target_bases_40X", "PCT_target_bases_50X", "PCT_target_bases_100X"]
-        col_format = ["Mean_bait_coverage", "Mean_target_coverage", "Fold_enrichment", "Fold_80_base_penalty", 
-                      "HS_penalty_10X", "HS_penalty_20X", "HS_penalty_30X", "HS_penalty_40X", "HS_penalty_50X", 
+        col_format = ["Mean_bait_coverage", "Mean_target_coverage", "Fold_enrichment", "Fold_80_base_penalty",
+                      "HS_penalty_10X", "HS_penalty_20X", "HS_penalty_30X", "HS_penalty_40X", "HS_penalty_50X",
                       "HS_penalty_100X", "AT_dropout", "GC_dropout"]
 
         with open(QCStats_file, "r") as QCStats:
@@ -299,20 +303,18 @@ def HSMetrics(run, path):
                 l = line.split("\t")
                 sample.append(l)
 
-            qc_table = [list(i) for i in map(None,*sample)]
+            qc_table = [list(i) for i in map(None, *sample)]
             qc_table[0][0] = "Sample"
 
             table_header = qc_table[0][:-1]
             table_header = [item.replace(" ", "_") for item in table_header]
 
-
             for col in dict_columns:
                 dict_columns[col]['index'] = table_header.index(dict_columns[col]['column'])
 
-
             for stats in qc_table[1:]:
                 data_dict = {}
-                stats = stats[:-1]      #there is a None at the end of each line
+                stats = stats[:-1]                                              # there is a None at the end of each line
                 sample_name = stats[table_header.index('Sample')]
                 sample_name = sample_name.replace("_dedup", "")
                 for col in dict_columns:

@@ -58,8 +58,8 @@ def update_run_data(args):
     scripts.delete.run_all.del_all_rundata(args.run)
     scripts.upload.raw_data.up_to_database(args.run, args.path_raw, args.sequencer)
     scripts.upload.run_processed.up_to_database(args.run, args.path_proc)
-    
-    
+
+
 def update_proc_run_data(args):
     """Delete and then upload processed run data
     """

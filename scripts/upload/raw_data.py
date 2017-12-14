@@ -56,7 +56,6 @@ def up_to_database(run, path, sequencer):
                     sys.stdout.write("Data deleted from database \n")
                     sys.exit()
 
-
                 for lane in lane_dict:
                     insert_lane = run_lane.insert().values(
                         Lane=str(lane_dict[lane]['Lane']),
