@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-'''Delete processed run
-'''
+"""Delete processed run"""
 
 from ..database import connection, get, set_run
 import warnings

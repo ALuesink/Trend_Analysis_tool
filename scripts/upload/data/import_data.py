@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-'''Functions for retrieving raw and processed run data
-'''
+"""Functions for retrieving raw and processed run data"""
 
 from datetime import datetime
 from html_table_parser import HTMLTableParser
@@ -10,8 +9,7 @@ import vcf
 
 
 def laneHTML(run, path):
-    '''Retrieve data from the lane.html page, the data is the general run data and date per lane
-    '''
+    """Retrieve data from the lane.html page, the data is the general run data and date per lane"""
     try:
         lane_dict = {}
         data_run = {}
@@ -87,8 +85,7 @@ def laneHTML(run, path):
 
 
 def laneBarcodeHTML(run, path):
-    '''Retrieve data from the laneBarcode.html page, the data is per barcode/sample per lane
-    '''
+    """Retrieve data from the laneBarcode.html page, the data is per barcode/sample per lane"""
     try:
         samples_dict = {}
 
@@ -145,9 +142,9 @@ def laneBarcodeHTML(run, path):
 
 
 def vcf_file(run, path):
-    '''Retrieve data from a vcf file, for each sample the number of variants,
+    """Retrieve data from a vcf file, for each sample the number of variants,
     homo- and heterozygous, number of dbSNP variants and PASS variants is determained
-    '''
+    """
     try:
         dic_samples = {}
         file_vcf = commands.getoutput('find {path}/{run}/ -maxdepth 1 -iname \'.filtered_variants.vcf\''.format(
@@ -194,8 +191,7 @@ def vcf_file(run, path):
 
 
 def runstat_file(run, path):
-    '''Retrieve data from the runstats file, for each sample the percentage duplication is retrieved
-    '''
+    """Retrieve data from the runstats file, for each sample the percentage duplication is retrieved"""
     try:
         sample_dup = {}
         runstats_file = commands.getoutput('find {path}/{run}/ -iname \'run_stats.txt\''.format(
@@ -229,8 +225,8 @@ def runstat_file(run, path):
 
 
 def HSMetrics(run, path):
-    '''Retrieve data from the HSMetrics_summary.transposed file, from this file all the data is transferred to a dictionary
-    '''
+    """Retrieve data from the HSMetrics_summary.transposed file, from this file all the data is transferred to a dictionary
+    """
     try:
         sample_stats = {}
         QCStats_file = commands.getoutput('find {path}/{run}/QCStats/ -iname \'HSMetrics_summary.transposed.txt\''.format(

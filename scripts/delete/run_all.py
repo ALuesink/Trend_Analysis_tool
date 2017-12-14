@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-'''Delete run data from the whole database
-'''
+"""Delete run data from the whole database"""
 
 from ..database import connection, get, set_run
 import warnings

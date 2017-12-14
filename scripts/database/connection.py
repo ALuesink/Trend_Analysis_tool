@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-'''Make database connection and set Table objects'''
+"""Make database connection and set Table objects"""
 
 from sqlalchemy import create_engine, Table, MetaData
 import config

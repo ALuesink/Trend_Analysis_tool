@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-'''Delete processed samples from the database
-'''
+"""Delete processed samples from the database"""
 
 from ..database import connection, get, set_run
 import warnings

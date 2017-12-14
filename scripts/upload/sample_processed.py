@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-'''Upload processed samples to the database
-'''
+"""Upload processed samples to the database"""
 from ..database import connection, get, set_run
 import warnings
 import data

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-'''Upload processed run data to database
-'''
+"""Upload processed run data to database"""
 
 from ..database import connection, get, set_run
 import warnings

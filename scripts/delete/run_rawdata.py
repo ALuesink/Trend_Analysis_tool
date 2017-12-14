@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-'''Delete raw run data from the database
-'''
+"""Delete raw run data from the database"""
 
 from ..database import connection, get, set_run
 import warnings
