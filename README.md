@@ -1,6 +1,7 @@
-# Trend_Analysis
+# Trend Analysis for Next Generation Sequencing Data - the tool
 
 A tool for trend analysis of Next Generation Sequencing quality data.
+This is the back-end part of the tool. The front-end, Shiny website, can be found [here](https://github.com/ALuesink/Trend_Analysis_website "Trend Analysis website")
 
 ## Getting Started 
 The tool requires the following dependencies:
@@ -55,10 +56,10 @@ python trend_analysis.py delete sample_proc 'run' 'samples'
 ```
 
 ### Update data
-When data in the datebase needs to be update the data will be delete first before the new data is added.  
+When data in the database needs to be update the data will be delete first before the new data is added.  
 To update all data of a run, the run name, path to the raw data directory, path the processed data directory and the sequencer are needed.  
-When only the processed data of a run needs to be updated, the run name and the path to the processed data directory are nedded.  
-In order to update certain samples, the run name, the path to the procesed data and the samples need to be entered.  
+When only the processed data of a run needs to be updated, the run name and the path to the processed data directory are needed.  
+In order to update certain samples, the run name, the path to the processed data and the samples need to be entered.  
 
 Delete and then upload new run data:
 ```
@@ -74,7 +75,7 @@ python trend_analysis.py update sample 'run' 'path' 'samples'
 ```
 
 ## Updating the tool
-There are multiple scenarios where the codes need to be changed.  
+There are multiple scenarios when the codes needs to be changed.  
 When a new sequencer will be used, this sequencer needs to be added to the script.  
 At the same time, when there are quality parameters added to one of the files, these new parameters also need to be added to the script.  
 
