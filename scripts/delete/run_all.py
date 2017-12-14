@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-"""Delete run data from the whole database
-"""
+'''Delete run data from the whole database
+'''
 
 from ..database import connection, get, set_run
 import warnings
@@ -8,7 +8,7 @@ import warnings
 
 def del_all_rundata(run):
     with warnings.catch_warnings():
-        warnings.simplefilter("error")
+        warnings.simplefilter('error')
         try:
             run = set_run.set_run_name(run)
 
@@ -38,7 +38,7 @@ def del_all_rundata(run):
                 conn.execute(del_sample_sequencer)
                 conn.execute(del_sample_processed)
             else:
-                print("This run is not in the database")
+                print('This run is not in the database')
 
             conn.close()
 

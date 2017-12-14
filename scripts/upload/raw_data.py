@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-"""Upload raw data
-"""
+'''Upload raw data
+'''
 
 from ..database import connection, get, set_run
 import warnings
@@ -9,15 +9,15 @@ import data
 
 
 def up_to_database(run, path, sequencer):
-    """Get data of inserted run and upload the data to the database
-    """
+    '''Get data of inserted run and upload the data to the database
+    '''
     with warnings.catch_warnings():
         try:
             run = set_run.set_run_name(run)
             runs_db = get.runs()
 
             if run in runs_db:
-                sys.stdout.write("This run is already in the database \n")
+                sys.stdout.write('This run is already in the database \n')
             else:
                 run_dict, lane_dict = data.import_data.laneHTML(run, path)
                 samples_dict = data.import_data.laneBarcodeHTML(run, path)
@@ -45,7 +45,8 @@ def up_to_database(run, path, sequencer):
                     Cluster_PF=run_dict['Cluster_PF'],
                     Yield_Mbases=run_dict['Yield_Mbases'], Seq_ID=seq_ID,
                     Date=run_dict['Date'], asDate=run_dict['asDate'],
-                    Sequencer=sequencer)
+                    Sequencer=sequencer
+                    )
 
                 con_run = conn.execute(insert_run)
                 run_ID = con_run.inserted_primary_key
@@ -53,7 +54,7 @@ def up_to_database(run, path, sequencer):
                 if Warning:
                     delete = run_table.delete().where(run_table.c.Run_ID == run_ID)
                     conn.execute(delete)
-                    sys.stdout.write("Data deleted from database \n")
+                    sys.stdout.write('Data deleted from database \n')
                     sys.exit()
 
                 for lane in lane_dict:
@@ -67,7 +68,8 @@ def up_to_database(run, path, sequencer):
                         PCT_PF_Clusters=lane_dict[lane]['PCT_PF_Clusters'],
                         PCT_Q30_bases=lane_dict[lane]['PCT_Q30_bases'],
                         Mean_Quality_Score=lane_dict[lane]['Mean_Quality_Score'],
-                        Run_ID=run_ID)
+                        Run_ID=run_ID
+                        )
 
                     insert = conn.execute(insert_lane)
                     insert_ID = insert.inserted_primary_key
@@ -75,7 +77,7 @@ def up_to_database(run, path, sequencer):
                     if Warning:
                         delete = run_lane.delete().where(run_lane.c.Run_Lane_ID == insert_ID)
                         conn.execute(delete)
-                        sys.stdout.write("Data deleted from database \n")
+                        sys.stdout.write('Data deleted from database \n')
                         sys.exit()
 
                 for sample in samples_dict:
@@ -92,16 +94,18 @@ def up_to_database(run, path, sequencer):
                         PCT_PF_Clusters=samples_dict[sample]['PCT_PF_Clusters'],
                         PCT_Q30_bases=samples_dict[sample]['PCT_Q30_bases'],
                         Mean_Quality_Score=samples_dict[sample]['Mean_Quality_Score'],
-                        Run_ID=run_ID)
+                        Run_ID=run_ID
+                        )
 
                     insert = conn.execute(insert_sample)
                     insert_ID = insert.inserted_primary_key
                     if Warning:
                         delete = sample_sequencer.delete().where(sample_sequencer.c.Sample_Seq_ID == insert_ID)
                         conn.execute(delete)
-                        sys.stdout.write("Data deleted from database \n")
+                        sys.stdout.write('Data deleted from database \n')
                         sys.exit()
 
                 conn.close()
+
         except Exception, e:
             print(e)

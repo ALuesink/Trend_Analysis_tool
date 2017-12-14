@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-"""Functions for retrieving raw and processed run data
-"""
+'''Functions for retrieving raw and processed run data
+'''
 
 from datetime import datetime
 from html_table_parser import HTMLTableParser
@@ -10,8 +10,8 @@ import vcf
 
 
 def laneHTML(run, path):
-    """Retrieve data from the lane.html page, the data is the general run data and date per lane
-    """
+    '''Retrieve data from the lane.html page, the data is the general run data and date per lane
+    '''
     try:
         lane_dict = {}
         data_run = {}
@@ -35,17 +35,17 @@ def laneHTML(run, path):
             'Mean_Quality_Score': {'column': 'Mean Quality Score'}
         }
 
-        date = run.split("_")[0]
-        date = "20" + date[0:2] + "-" + date[2:4] + "-" + date[4:6]
-        d = datetime.strptime(date, "%Y-%m-%d")
+        date = run.split('_')[0]
+        date = '20' + date[0:2] + '-' + date[2:4] + '-' + date[4:6]
+        d = datetime.strptime(date, '%Y-%m-%d')
         as_date = (d-epoch).days
 
-        lanehtml = commands.getoutput("find {path}/{run}/Data/Intensities/BaseCalls/Reports/html/*/all/all/all/ -iname \"lane.html\"".format(
+        lanehtml = commands.getoutput('find {path}/{run}/Data/Intensities/BaseCalls/Reports/html/*/all/all/all/ -iname \'lane.html\''.format(
             path=str(path),
             run=str(run)
             ), echo=False)
 
-        with open(lanehtml, "r") as lane:
+        with open(lanehtml, 'r') as lane:
             html = lane.read()
             tableParser = HTMLTableParser()
             tableParser.feed(html)
@@ -61,10 +61,10 @@ def laneHTML(run, path):
                 dict_lane[col]['index'] = header_lane.index(dict_lane[col]['column'])
 
             stats_run = tables[1][1]
-            stats_run = [convert_numbers(item.replace(",", "")) for item in stats_run]
+            stats_run = [convert_numbers(item.replace(',', '')) for item in stats_run]
             for col in dict_run:
                 stat = stats_run[dict_run[col]['index']]
-                stat = float("{0:.2f}".format(stat))
+                stat = float('{0:.2f}'.format(stat))
                 data_run[col] = stat
 
             data_run['Date'] = date
@@ -72,7 +72,7 @@ def laneHTML(run, path):
 
             for lane in tables[2][1:]:
                 data_lane = {}
-                lane = [convert_numbers(item.replace(",", "")) for item in lane]
+                lane = [convert_numbers(item.replace(',', '')) for item in lane]
                 lane_num = lane[header_lane.index('Lane')]
                 for col in dict_lane:
                     stat = lane[dict_lane[col]['index']]
@@ -87,8 +87,8 @@ def laneHTML(run, path):
 
 
 def laneBarcodeHTML(run, path):
-    """Retrieve data from the laneBarcode.html page, the data is per barcode/sample per lane
-    """
+    '''Retrieve data from the laneBarcode.html page, the data is per barcode/sample per lane
+    '''
     try:
         samples_dict = {}
 
@@ -107,12 +107,12 @@ def laneBarcodeHTML(run, path):
             'Mean_Quality_Score': {'column': 'Mean Quality Score'}
         }
 
-        samplehtml = commands.getoutput("find {path}/{run}/Data/Intensities/BaseCalls/Reports/html/*/all/all/all/ -iname \"laneBarcode.html\"".format(
+        samplehtml = commands.getoutput('find {path}/{run}/Data/Intensities/BaseCalls/Reports/html/*/all/all/all/ -iname \'laneBarcode.html\''.format(
             path=str(path),
             run=str(run)
             ), echo=False)
 
-        with open(samplehtml, "r") as sample:
+        with open(samplehtml, 'r') as sample:
             html = sample.read()
             tableParser = HTMLTableParser()
             tableParser.feed(html)
@@ -125,12 +125,12 @@ def laneBarcodeHTML(run, path):
 
             for sample_lane in tables[2][1:]:
                 data_sample_lane = {}
-                if sample_lane[header_samplehtml.index('Project')].upper() != "DEFAULT":
-                    stats = [convert_numbers(item.replace(",", "")) for item in sample_lane]
+                if sample_lane[header_samplehtml.index('Project')].upper() != 'DEFAULT':
+                    stats = [convert_numbers(item.replace(',', '')) for item in sample_lane]
 
                     lane = stats[header_samplehtml.index('Lane')]
                     sample = stats[header_samplehtml.index('Sample')]
-                    lane_sample = str(lane) + "--" + str(sample)
+                    lane_sample = str(lane) + '--' + str(sample)
 
                     for col in dict_samples:
                         stat = stats[dict_samples[col]['index']]
@@ -145,24 +145,24 @@ def laneBarcodeHTML(run, path):
 
 
 def vcf_file(run, path):
-    """Retrieve data from a vcf file, for each sample the number of variants,
+    '''Retrieve data from a vcf file, for each sample the number of variants,
     homo- and heterozygous, number of dbSNP variants and PASS variants is determained
-    """
+    '''
     try:
         dic_samples = {}
-        file_vcf = commands.getoutput("find {path}/{run}/ -maxdepth 1 -iname \".filtered_variants.vcf\"".format(
+        file_vcf = commands.getoutput('find {path}/{run}/ -maxdepth 1 -iname \'.filtered_variants.vcf\''.format(
             path=str(path),
             run=str(run)
             ), echo=False)
 
-        with open(file_vcf, "r") as vcffile:
+        with open(file_vcf, 'r') as vcffile:
             vcf_file = vcf.Reader(vcffile)
             list_samples = vcf_file.samples
             for sample in list_samples:
                 dic_samples[sample] = [0, 0, 0]
             for variant in vcf_file:
                 samples = []
-                if "DB"in variant.INFO:
+                if 'DB'in variant.INFO:
                     DB = 1
                 else:
                     DB = 0
@@ -194,30 +194,30 @@ def vcf_file(run, path):
 
 
 def runstat_file(run, path):
-    """Retrieve data from the runstats file, for each sample the percentage duplication is retrieved
-    """
+    '''Retrieve data from the runstats file, for each sample the percentage duplication is retrieved
+    '''
     try:
         sample_dup = {}
-        runstats_file = commands.getoutput("find {path}/{run}/ -iname \"run_stats.txt\"".format(
+        runstats_file = commands.getoutput('find {path}/{run}/ -iname \'run_stats.txt\''.format(
             path=str(path),
             run=str(run)
             ), echo=False)
 
-        with open(runstats_file, "r") as runstats:
+        with open(runstats_file, 'r') as runstats:
             run_stats = runstats.read()
-            run_stats = run_stats.split("working")
+            run_stats = run_stats.split('working')
 
             for sample in run_stats[1:]:
-                stats = sample.split("\n")
+                stats = sample.split('\n')
 
-                sample_name = stats[0].split("/")[-1]
-                sample_name = sample_name.replace("_dedup.flagstat...", "")
+                sample_name = stats[0].split('/')[-1]
+                sample_name = sample_name.replace('_dedup.flagstat...', '')
 
                 dup = 0
                 for x in stats:
-                    if "%duplication" in x:
-                        dup = float(x.split("%")[0].strip("\t").strip())
-                        dup = float("{0:.2f}".format(dup))
+                    if '%duplication' in x:
+                        dup = float(x.split('%')[0].strip('\t').strip())
+                        dup = float('{0:.2f}'.format(dup))
 
                 sample_dup[sample_name] = dup
 
@@ -229,11 +229,11 @@ def runstat_file(run, path):
 
 
 def HSMetrics(run, path):
-    """Retrieve data from the HSMetrics_summary.transposed file, from this file all the data is transferred to a dictionary
-    """
+    '''Retrieve data from the HSMetrics_summary.transposed file, from this file all the data is transferred to a dictionary
+    '''
     try:
         sample_stats = {}
-        QCStats_file = commands.getoutput("find {path}/{run}/QCStats/ -iname \"HSMetrics_summary.transposed.txt\"".format(
+        QCStats_file = commands.getoutput('find {path}/{run}/QCStats/ -iname \'HSMetrics_summary.transposed.txt\''.format(
             path=str(path),
             run=str(run)
             ), echo=False)
@@ -287,27 +287,29 @@ def HSMetrics(run, path):
                 'Bait_design_efficiency': {'column': 'BAIT_DESIGN_EFFICIENCY'}
         }
 
-        col_to_pct = ["Bait_design_efficiency", "PCT_PF_reads", "PCT_PF_UQ_reads", "PCT_PF_UQ_reads_aligned",
-                      "PCT_selected_bases", "PCT_off_bait", "On_bait_vs_selected", "PCT_usable_bases_on_bait",
-                      "PCT_usable_bases_on_target", "Zero_CVG_targets_PCT", "PCT_target_bases_2X",
-                      "PCT_target_bases_10X", "PCT_target_bases_20X", "PCT_target_bases_30X",
-                      "PCT_target_bases_40X", "PCT_target_bases_50X", "PCT_target_bases_100X"]
-        col_format = ["Mean_bait_coverage", "Mean_target_coverage", "Fold_enrichment", "Fold_80_base_penalty",
-                      "HS_penalty_10X", "HS_penalty_20X", "HS_penalty_30X", "HS_penalty_40X", "HS_penalty_50X",
-                      "HS_penalty_100X", "AT_dropout", "GC_dropout"]
+        col_to_pct = ['Bait_design_efficiency', 'PCT_PF_reads', 'PCT_PF_UQ_reads', 'PCT_PF_UQ_reads_aligned',
+                      'PCT_selected_bases', 'PCT_off_bait', 'On_bait_vs_selected', 'PCT_usable_bases_on_bait',
+                      'PCT_usable_bases_on_target', 'Zero_CVG_targets_PCT', 'PCT_target_bases_2X',
+                      'PCT_target_bases_10X', 'PCT_target_bases_20X', 'PCT_target_bases_30X',
+                      'PCT_target_bases_40X', 'PCT_target_bases_50X', 'PCT_target_bases_100X'
+                      ]
+        col_format = ['Mean_bait_coverage', 'Mean_target_coverage', 'Fold_enrichment', 'Fold_80_base_penalty',
+                      'HS_penalty_10X', 'HS_penalty_20X', 'HS_penalty_30X', 'HS_penalty_40X', 'HS_penalty_50X',
+                      'HS_penalty_100X', 'AT_dropout', 'GC_dropout'
+                      ]
 
-        with open(QCStats_file, "r") as QCStats:
+        with open(QCStats_file, 'r') as QCStats:
             sample = []
-            qc_stats = QCStats.read().split("\n")
+            qc_stats = QCStats.read().split('\n')
             for line in qc_stats:
-                l = line.split("\t")
+                l = line.split('\t')
                 sample.append(l)
 
             qc_table = [list(i) for i in map(None, *sample)]
-            qc_table[0][0] = "Sample"
+            qc_table[0][0] = 'Sample'
 
             table_header = qc_table[0][:-1]
-            table_header = [item.replace(" ", "_") for item in table_header]
+            table_header = [item.replace(' ', '_') for item in table_header]
 
             for col in dict_columns:
                 dict_columns[col]['index'] = table_header.index(dict_columns[col]['column'])
@@ -316,22 +318,22 @@ def HSMetrics(run, path):
                 data_dict = {}
                 stats = stats[:-1]                                              # there is a None at the end of each line
                 sample_name = stats[table_header.index('Sample')]
-                sample_name = sample_name.replace("_dedup", "")
+                sample_name = sample_name.replace('_dedup', '')
                 for col in dict_columns:
-                    if col == "Percentage_reads_mapped":
+                    if col == 'Percentage_reads_mapped':
                         stat = stats[dict_columns[col]['index']]
-                        stat = float(stat.strip("%"))
+                        stat = float(stat.strip('%'))
                         data_dict[col] = stat
                     elif col in col_to_pct:
                         stat = stats[dict_columns[col]['index']]
                         stat = float(stat)*100
-                        stat = float("{0:.2f}".format(stat))
+                        stat = float('{0:.2f}'.format(stat))
                         data_dict[col] = stat
                     elif col in col_format:
                         stat = float(stats[dict_columns[col]['index']])
-                        stat = float("{0:.2f}".format(stat))
+                        stat = float('{0:.2f}'.format(stat))
                         data_dict[col] = stat
-                    elif col == "Sample_name":
+                    elif col == 'Sample_name':
                         data_dict[col] = sample_name
                     else:
                         data_dict[col] = stats[dict_columns[col]['index']]

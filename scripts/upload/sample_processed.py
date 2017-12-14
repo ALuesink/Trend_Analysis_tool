@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-"""Upload processed samples to the database
-"""
+'''Upload processed samples to the database
+'''
 from ..database import connection, get, set_run
 import warnings
 import data
@@ -14,7 +14,7 @@ def up_to_database(run, path, samples):
             sample_run_db = get.sample_run_processed()
 
             samples_db = []
-            for sample in samples:
+            for sample in samples:                                              # Loop to check if the combination sample and run already exists in the database
                 if sample in sample_run_db:
                     run_db = sample_run_db[sample]
                     if run == run_db:
@@ -22,10 +22,10 @@ def up_to_database(run, path, samples):
 
             list_samples = list(set(samples) - set(samples_db))
 
-            if len(list_samples) > 0:
-                sample_vcf = data.import_data.vcf_file(run, path)                   # dictionary: keys are sample names, values are vcf stats
-                sample_dup = data.import_data.runstat_file(run, path)               # dictionary: keys are sample names, values percentage duplication
-                dict_samples = data.import_data.HSMetrics(run, path)                # dictionary: keys are sample names, values are HSMetrics/Picard stats
+            if len(list_samples) > 0:                                           # Only the samples, in combination with their run, that aren't in the database yet
+                sample_vcf = data.import_data.vcf_file(run, path)               # dictionary: keys are sample names, values are vcf stats
+                sample_dup = data.import_data.runstat_file(run, path)           # dictionary: keys are sample names, values percentage duplication
+                dict_samples = data.import_data.HSMetrics(run, path)            # dictionary: keys are sample names, values are HSMetrics/Picard stats
 
                 engine = connection.engine()
                 conn = engine.connect()
@@ -51,7 +51,8 @@ def up_to_database(run, path, samples):
                             Bait_name=stats['Bait_name'], Genome_Size=stats['Genome_Size'],
                             Bait_territory=stats['Bait_territory'],
                             Target_territory=stats['Target_territory'],
-                            Bait_design_efficiency=stats['Bait_design_efficiency'])
+                            Bait_design_efficiency=stats['Bait_design_efficiency']
+                            )
 
                         con_bait_set = conn.execute(insert_bait_set)
                         bait_id = con_bait_set.inserted_primary_key
@@ -59,7 +60,7 @@ def up_to_database(run, path, samples):
                         if Warning:
                             delete = bait_set.delete().where(bait_set.c.Bait_ID == bait_id)
                             conn.execute(delete)
-                            sys.stdout.write("Data deleted from database \n")
+                            sys.stdout.write('Data deleted from database \n')
                             sys.exit()
 
                     insert_sample = sample_processed.insert().values(
@@ -89,21 +90,22 @@ def up_to_database(run, path, samples):
                         HS_penalty_40X=stats['HS_penalty_40X'], HS_penalty_50X=stats['HS_penalty_50X'],
                         HS_penalty_100X=stats['HS_penalty_100X'], AT_dropout=stats['AT_dropout'],
                         GC_dropout=stats['GC_dropout'], Duplication=dup, Number_variants=vcf[0],
-                        dbSNP_variants=vcf[1], PASS_variants=vcf[2], Run_ID=run_id, Bait_ID=bait_id)
+                        dbSNP_variants=vcf[1], PASS_variants=vcf[2], Run_ID=run_id, Bait_ID=bait_id
+                        )
 
                     insert = conn.execute(insert_sample)
                     insert_ID = insert.inserted_primary_key
 
-                    if Warning:
+                    if Warning:                                                 # If a warning is been thrown, the last inserted sample will be deleted and the programme ended
                         delete = sample_processed.delete().where(sample_processed.c.Sample_Proc_ID == insert_ID)
                         conn.execute(delete)
-                        sys.stdout.write("Data deleted from database \n")
+                        sys.stdout.write('Data deleted from database \n')
                         sys.exit()
 
                 conn.close()
 
             else:
-                sys.stdout.write("These samples are already in the database \n")
+                sys.stdout.write('These samples are already in the database \n')
 
         except Exception, e:
             print(repr(e))

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-"""Delete processed samples from the database
-"""
+'''Delete processed samples from the database
+'''
 
 from ..database import connection, get, set_run
 import warnings
@@ -8,7 +8,7 @@ import warnings
 
 def del_sampledata(run, samples):
     with warnings.catch_warnings():
-        warnings.simplefilter("error")
+        warnings.simplefilter('error')
 
         try:
             run = set_run.set_run_name(run)
@@ -29,7 +29,7 @@ def del_sampledata(run, samples):
                         where(sample_processed.c.Sample_name == sample)
                     conn.execute(del_sample)
             else:
-                print("This run is not in the database")
+                print('This run is not in the database')
 
             conn.close()
 

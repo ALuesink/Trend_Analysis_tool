@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-"""get Runs, Sequencer, Bait Set and processed Runs from database
-"""
+'''get Runs, Sequencer, Bait Set and processed Runs from database
+'''
 
 from sqlalchemy import select
 import connection
@@ -9,8 +9,8 @@ engine = connection.engine()
 
 
 def runs():
-    """Get Runs and Run ID's of runs already in the database
-    """
+    '''Get Runs and Run ID's of runs already in the database
+    '''
     run_in_db = {}
 
     conn = engine.connect()
@@ -28,8 +28,8 @@ def runs():
 
 
 def sequencer():
-    """Get Sequencer and Sequencer ID's of sequencers already in the database
-    """
+    '''Get Sequencer and Sequencer ID's of sequencers already in the database
+    '''
     seq_in_db = {}
 
     conn = engine.connect()
@@ -47,8 +47,8 @@ def sequencer():
 
 
 def bait_set():
-    """Get Bait Set and Bait Set ID's of bait sets already in the database
-    """
+    '''Get Bait Set and Bait Set ID's of bait sets already in the database
+    '''
     baitset_in_db = {}
 
     conn = engine.connect()
@@ -66,8 +66,8 @@ def bait_set():
 
 
 def runs_processed():
-    """Get Runs which are already in the Sample Processed table
-    """
+    '''Get Runs which are already in the Sample Processed table
+    '''
     run_processed_db = set()
 
     conn = engine.connect()
@@ -87,8 +87,8 @@ def runs_processed():
 
 
 def sample_run_processed():
-    """Get the combination of samples and their run id's from the Sample Processed table
-    """
+    '''Get the combination of samples and their run id's from the Sample Processed table
+    '''
     sample_run_db = {}
 
     conn = engine.connect()
