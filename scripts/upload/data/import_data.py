@@ -41,7 +41,7 @@ def laneHTML(run, path):
         lanehtml = commands.getoutput('find {path}/{run}/Data/Intensities/BaseCalls/Reports/html/*/all/all/all/ -iname \'lane.html\''.format(
             path=str(path),
             run=str(run)
-            ), echo=False)
+            ))
 
         with open(lanehtml, 'r') as lane:
             html = lane.read()
@@ -107,7 +107,7 @@ def laneBarcodeHTML(run, path):
         samplehtml = commands.getoutput('find {path}/{run}/Data/Intensities/BaseCalls/Reports/html/*/all/all/all/ -iname \'laneBarcode.html\''.format(
             path=str(path),
             run=str(run)
-            ), echo=False)
+            ))
 
         with open(samplehtml, 'r') as sample:
             html = sample.read()
@@ -150,7 +150,7 @@ def vcf_file(run, path):
         file_vcf = commands.getoutput('find {path}/{run}/ -maxdepth 1 -iname \'.filtered_variants.vcf\''.format(
             path=str(path),
             run=str(run)
-            ), echo=False)
+            ))
 
         with open(file_vcf, 'r') as vcffile:
             vcf_file = vcf.Reader(vcffile)
@@ -197,7 +197,7 @@ def runstat_file(run, path):
         runstats_file = commands.getoutput('find {path}/{run}/ -iname \'run_stats.txt\''.format(
             path=str(path),
             run=str(run)
-            ), echo=False)
+            ))
 
         with open(runstats_file, 'r') as runstats:
             run_stats = runstats.read()
@@ -232,7 +232,7 @@ def HSMetrics(run, path):
         QCStats_file = commands.getoutput('find {path}/{run}/QCStats/ -iname \'HSMetrics_summary.transposed.txt\''.format(
             path=str(path),
             run=str(run)
-            ), echo=False)
+            ))
 
         dict_columns = {
                 'Sample_name': {'column': 'Sample'},
