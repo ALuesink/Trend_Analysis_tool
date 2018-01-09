@@ -62,7 +62,7 @@ def laneHTML(run, path):
             stats_run = [convert_numbers(item.replace(',', '')) for item in stats_run]
             for col in dict_run:
                 stat = stats_run[dict_run[col]['index']]
-                stat = float('{0:.2f}'.format(stat))
+                stat = int(stat)
                 data_run[col] = stat
 
             data_run['Date'] = date
@@ -146,12 +146,17 @@ def vcf_file(run, path):
     homo- and heterozygous, number of dbSNP variants and PASS variants is determained
     """
     try:
+        print("vcf")
         dic_samples = {}
-        file_vcf = commands.getoutput('find {path}/{run}/ -maxdepth 1 -iname \'.filtered_variants.vcf\''.format(
+        string = '{path}/{run}/'.format(
+            path=str(path),
+            run=str(run))
+        print(string)
+        file_vcf = commands.getoutput('find {path}/{run}/ -maxdepth 1 -iname \'*.filtered_variants.vcf\''.format(
             path=str(path),
             run=str(run)
             ))
-
+        print(file_vcf)
         with open(file_vcf, 'r') as vcffile:
             vcf_file = vcf.Reader(vcffile)
             list_samples = vcf_file.samples
@@ -193,6 +198,7 @@ def vcf_file(run, path):
 def runstat_file(run, path):
     """Retrieve data from the runstats file, for each sample the percentage duplication is retrieved"""
     try:
+        print("runstats")
         sample_dup = {}
         runstats_file = commands.getoutput('find {path}/{run}/ -iname \'run_stats.txt\''.format(
             path=str(path),
@@ -228,6 +234,7 @@ def HSMetrics(run, path):
     """Retrieve data from the HSMetrics_summary.transposed file, from this file all the data is transferred to a dictionary
     """
     try:
+        print("HSMetrics")
         sample_stats = {}
         QCStats_file = commands.getoutput('find {path}/{run}/QCStats/ -iname \'HSMetrics_summary.transposed.txt\''.format(
             path=str(path),
