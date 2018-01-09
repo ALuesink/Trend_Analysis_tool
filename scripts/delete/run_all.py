@@ -14,7 +14,7 @@ def del_all_rundata(run):
             engine = connection.engine()
             conn = engine.connect()
 
-            run = connection.run_table(engine)
+            run_table = connection.run_table(engine)
             run_per_lane = connection.run_per_lane_table(engine)
             sample_sequencer = connection.sample_sequencer_table(engine)
             sample_processed = connection.sample_processed_table(engine)
@@ -24,7 +24,7 @@ def del_all_rundata(run):
             if run in runs_in_db:
                 run_id = runs_in_db[run]
 
-                del_run = run.delete().where(run.c.Run_ID == run_id)
+                del_run = run_table.delete().where(run_table.c.Run_ID == run_id)
                 del_run_per_lane = run_per_lane.delete().\
                     where(run_per_lane.c.Run_ID == run_id)
                 del_sample_sequencer = sample_sequencer.delete().\
