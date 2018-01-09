@@ -82,7 +82,7 @@ def laneHTML(run, path):
         return data_run, lane_dict
 
     except Exception, e:
-        sys.stdout.write(e)
+        print(e)
 
 
 def laneBarcodeHTML(run, path):
@@ -139,7 +139,7 @@ def laneBarcodeHTML(run, path):
         return samples_dict
 
     except Exception, e:
-        sys.stdout.write(e)
+        print(e)
 
 
 def vcf_file(run, path):
@@ -187,7 +187,7 @@ def vcf_file(run, path):
         # dic_samples[sample name] = [number of variant, Percentage dbSNP variants from total, Percentage PASS variants from total]
 
     except Exception, e:
-        sys.stdout.write(e)
+        print(e)
 
 
 def runstat_file(run, path):
@@ -221,7 +221,7 @@ def runstat_file(run, path):
         # sample_dup[sample name] = duplication
 
     except Exception, e:
-        sys.stdout.write(e)
+        print(e)
 
 
 def HSMetrics(run, path):
@@ -339,4 +339,4 @@ def HSMetrics(run, path):
         return sample_stats
 
     except Exception, e:
-        sys.stdout.write(e)
+        print(e)

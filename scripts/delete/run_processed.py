@@ -30,4 +30,4 @@ def del_runprocessed(run):
             conn.close()
 
         except Exception, e:
-            sys.stdout.write(e)
+            print(e)

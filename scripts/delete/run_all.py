@@ -43,4 +43,4 @@ def del_all_rundata(run):
             conn.close()
 
         except Exception, e:
-            sys.stdout.write(e)
+            print(e)
