@@ -55,7 +55,7 @@ def up_to_database(run, path):
 #                            bait_id = con_bait_set.inserted_primary_key
 
                         except Warning, w:
-                            print(w)
+                            sys.stdout.write(w)
                             query = select([bait_set.c.Bait_ID]).\
                                 order_by(bait_set.c.Bait_ID.desc()).limit(1)
                             res = conn.execute(query).fetchall()
@@ -100,7 +100,7 @@ def up_to_database(run, path):
                         conn.execute(insert_sample)
 
                     except Warning, w:
-                        print(w)
+                        sys.stdout.write(w)
 #                        query = select([table_run.c.Run_ID]).\
 #                            where(table_run.c.Run == run)
 #                        res = conn.execute(query).fetchall()
@@ -115,4 +115,4 @@ def up_to_database(run, path):
                 conn.close()
 
         except Exception, e:
-            print(e)
+            sys.stdout.write(e)

@@ -60,7 +60,7 @@ def up_to_database(run, path, samples):
 #                            bait_id = con_bait_set.inserted_primary_key
 
                         except Warning, w:
-                            print(w)
+                            sys.stdout.write(w)
                             query = select([bait_set.c.Bait_ID]).\
                                 order_by(bait_set.c.Bait_ID.desc()).limit(1)
                             res = conn.execute(query).fetchall()
@@ -106,7 +106,7 @@ def up_to_database(run, path, samples):
                         insert_ID = insert.inserted_primary_key
 
                     except Warning, w:                                                 # If a warning is been thrown, the last inserted sample will be deleted and the programme ended
-                        print(w)
+                        sys.stdout.write(w)
                         query = select([sample_processed.c.Sample_Proc_ID]).\
                             where(sample_processed.c.Sample_name == sample)
                         res = conn.execute(query).fetchall()
@@ -124,4 +124,4 @@ def up_to_database(run, path, samples):
                 sys.stdout.write('These samples are already in the database \n')
 
         except Exception, e:
-            print(repr(e))
+            sys.stdout.write(repr(e))

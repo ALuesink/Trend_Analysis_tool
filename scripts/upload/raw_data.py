@@ -43,7 +43,7 @@ def up_to_database(run, path, sequencer):
                         seq_ID = con_seq.inserted_primary_key
 
                     except Warning, w:
-                        print(w)
+                        sys.stdout.write(w)
                         query = select([sequencer.c.Seq_ID]).\
                             order_by(sequencer.c.Seq_ID.desc()).limit(1)
                         res = conn.execute(query).fetchall()
@@ -102,7 +102,7 @@ def up_to_database(run, path, sequencer):
                         conn.execute(insert_sample)
 
                 except Warning, w:
-                    print(w)
+                    sys.stdout.write(w)
                     query = select([run_table.c.Run_ID]).\
                         where(run_table.c.Run == run)
                     res = conn.execute(query).fetchall()
@@ -116,4 +116,4 @@ def up_to_database(run, path, sequencer):
                 conn.close()
 
         except Exception, e:
-            print(e)
+            sys.stdout.write(e)

@@ -6,6 +6,7 @@ from html_table_parser import HTMLTableParser
 from utils import convert_numbers
 import commands
 import vcf
+import sys
 
 
 def laneHTML(run, path):
@@ -81,7 +82,7 @@ def laneHTML(run, path):
         return data_run, lane_dict
 
     except Exception, e:
-        print(e)
+        sys.stdout.write(e)
 
 
 def laneBarcodeHTML(run, path):
@@ -138,7 +139,7 @@ def laneBarcodeHTML(run, path):
         return samples_dict
 
     except Exception, e:
-        print(e)
+        sys.stdout.write(e)
 
 
 def vcf_file(run, path):
@@ -146,17 +147,11 @@ def vcf_file(run, path):
     homo- and heterozygous, number of dbSNP variants and PASS variants is determained
     """
     try:
-        print("vcf")
         dic_samples = {}
-        string = '{path}/{run}/'.format(
-            path=str(path),
-            run=str(run))
-        print(string)
         file_vcf = commands.getoutput('find {path}/{run}/ -maxdepth 1 -iname \'*.filtered_variants.vcf\''.format(
             path=str(path),
             run=str(run)
             ))
-        print(file_vcf)
         with open(file_vcf, 'r') as vcffile:
             vcf_file = vcf.Reader(vcffile)
             list_samples = vcf_file.samples
@@ -192,13 +187,12 @@ def vcf_file(run, path):
         # dic_samples[sample name] = [number of variant, Percentage dbSNP variants from total, Percentage PASS variants from total]
 
     except Exception, e:
-        print(e)
+        sys.stdout.write(e)
 
 
 def runstat_file(run, path):
     """Retrieve data from the runstats file, for each sample the percentage duplication is retrieved"""
     try:
-        print("runstats")
         sample_dup = {}
         runstats_file = commands.getoutput('find {path}/{run}/ -iname \'run_stats.txt\''.format(
             path=str(path),
@@ -227,14 +221,13 @@ def runstat_file(run, path):
         # sample_dup[sample name] = duplication
 
     except Exception, e:
-        print(e)
+        sys.stdout.write(e)
 
 
 def HSMetrics(run, path):
     """Retrieve data from the HSMetrics_summary.transposed file, from this file all the data is transferred to a dictionary
     """
     try:
-        print("HSMetrics")
         sample_stats = {}
         QCStats_file = commands.getoutput('find {path}/{run}/QCStats/ -iname \'HSMetrics_summary.transposed.txt\''.format(
             path=str(path),
@@ -346,4 +339,4 @@ def HSMetrics(run, path):
         return sample_stats
 
     except Exception, e:
-        print(e)
+        sys.stdout.write(e)

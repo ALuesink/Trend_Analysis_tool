@@ -32,9 +32,9 @@ def del_run_rawdata(run):
                 conn.execute(del_run_per_lane)
                 conn.execute(del_sample_sequencer)
             else:
-                print('This run is not in the database')
+                sys.stdout.write('This run is not in the database \n')
 
             conn.close()
 
         except Exception, e:
-            print(e)
+            sys.stdout.write(e)

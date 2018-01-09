@@ -3,6 +3,7 @@
 
 from ..database import connection, get, set_run
 import warnings
+import sys
 
 
 def del_all_rundata(run):
@@ -37,9 +38,9 @@ def del_all_rundata(run):
                 conn.execute(del_sample_sequencer)
                 conn.execute(del_sample_processed)
             else:
-                print('This run is not in the database')
+                sys.stdout.write('This run is not in the database \n')
 
             conn.close()
 
         except Exception, e:
-            print(e)
+            sys.stdout.write(e)

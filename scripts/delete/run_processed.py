@@ -25,9 +25,9 @@ def del_runprocessed(run):
                 del_run = sample_processed.delete().where(sample_processed.c.Run_ID == run_id)
                 conn.execute(del_run)
             else:
-                print('There is no processed data in the database for this run')
+                print('There is no processed data in the database for this run \n')
 
             conn.close()
 
         except Exception, e:
-            print(e)
+            sys.stdout.write(e)

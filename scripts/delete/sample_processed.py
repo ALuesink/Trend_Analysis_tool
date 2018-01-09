@@ -28,9 +28,9 @@ def del_sampledata(run, samples):
                         where(sample_processed.c.Sample_name == sample)
                     conn.execute(del_sample)
             else:
-                print('This run is not in the database')
+                sys.stdout.write('This run is not in the database \n')
 
             conn.close()
 
         except Exception, e:
-            print(e)
+            sys.stdout.write(e)
