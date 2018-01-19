@@ -26,7 +26,6 @@ def up_to_database(run, path):
                 engine = connection.engine()
                 conn = engine.connect()
 
-#                table_run = connection.run_table(engine)
                 sample_processed = connection.sample_processed_table(engine)
                 bait_set = connection.bait_set_table(engine)
 
@@ -52,7 +51,6 @@ def up_to_database(run, path):
                             )
 
                             conn.execute(insert_bait_set)
-#                            bait_id = con_bait_set.inserted_primary_key
 
                         except Warning, w:
                             print(w)

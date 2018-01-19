@@ -6,7 +6,6 @@ from html_table_parser import HTMLTableParser
 from utils import convert_numbers
 import commands
 import vcf
-import sys
 
 
 def laneHTML(run, path):
@@ -191,7 +190,9 @@ def vcf_file(run, path):
 
 
 def runstat_file(run, path):
-    """Retrieve data from the runstats file, for each sample the percentage duplication is retrieved"""
+    """Retrieve data from the runstats file,
+    for each sample the percentage duplication is retrieved
+    """
     try:
         sample_dup = {}
         runstats_file = commands.getoutput('find {path}/{run}/ -iname \'run_stats.txt\''.format(
@@ -225,7 +226,8 @@ def runstat_file(run, path):
 
 
 def HSMetrics(run, path):
-    """Retrieve data from the HSMetrics_summary.transposed file, from this file all the data is transferred to a dictionary
+    """Retrieve data from the HSMetrics_summary.transposed file,
+    from this file all the data is transferred to a dictionary
     """
     try:
         sample_stats = {}
@@ -283,14 +285,16 @@ def HSMetrics(run, path):
                 'Bait_design_efficiency': {'column': 'BAIT_DESIGN_EFFICIENCY'}
         }
 
-        col_to_pct = ['Bait_design_efficiency', 'PCT_PF_reads', 'PCT_PF_UQ_reads', 'PCT_PF_UQ_reads_aligned',
-                      'PCT_selected_bases', 'PCT_off_bait', 'On_bait_vs_selected', 'PCT_usable_bases_on_bait',
+        col_to_pct = ['Bait_design_efficiency', 'PCT_PF_reads', 'PCT_PF_UQ_reads',
+                      'PCT_PF_UQ_reads_aligned', 'PCT_selected_bases',
+                      'PCT_off_bait', 'On_bait_vs_selected', 'PCT_usable_bases_on_bait',
                       'PCT_usable_bases_on_target', 'Zero_CVG_targets_PCT', 'PCT_target_bases_2X',
                       'PCT_target_bases_10X', 'PCT_target_bases_20X', 'PCT_target_bases_30X',
                       'PCT_target_bases_40X', 'PCT_target_bases_50X', 'PCT_target_bases_100X'
                       ]
-        col_format = ['Mean_bait_coverage', 'Mean_target_coverage', 'Fold_enrichment', 'Fold_80_base_penalty',
-                      'HS_penalty_10X', 'HS_penalty_20X', 'HS_penalty_30X', 'HS_penalty_40X', 'HS_penalty_50X',
+        col_format = ['Mean_bait_coverage', 'Mean_target_coverage', 'Fold_enrichment',
+                      'Fold_80_base_penalty', 'HS_penalty_10X', 'HS_penalty_20X',
+                      'HS_penalty_30X', 'HS_penalty_40X', 'HS_penalty_50X',
                       'HS_penalty_100X', 'AT_dropout', 'GC_dropout'
                       ]
 
