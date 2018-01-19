@@ -27,25 +27,6 @@ def runs():
     return run_in_db
 
 
-def sequencer():
-    '''Get Sequencer and Sequencer ID's of sequencers already in the database
-    '''
-    seq_in_db = {}
-
-    conn = engine.connect()
-    sequencer = connection.sequencer_table(engine)
-
-    select_seq = select([sequencer.c.Name, sequencer.c.Seq_ID])
-    result_seq = conn.execute(select_seq).fetchall()
-
-    for seq in result_seq:
-        seq_in_db[seq[0]] = seq[1]
-
-    conn.close()
-
-    return seq_in_db
-
-
 def bait_set():
     '''Get Bait Set and Bait Set ID's of bait sets already in the database
     '''

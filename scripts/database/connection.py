@@ -17,11 +17,6 @@ def engine():
     return engine
 
 
-def sequencer_table(engine):
-    sequencer = Table('Sequencer', metadata, autoload=True, autoload_with=engine)
-    return sequencer
-
-
 def run_table(engine):
     run = Table('Run', metadata, autoload=True, autoload_with=engine)
     return run

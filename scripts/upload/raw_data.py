@@ -26,39 +26,15 @@ def up_to_database(run, path, sequencer):
                 engine = connection.engine()
                 conn = engine.connect()
 
-                sequencer_table = connection.sequencer_table(engine)
                 run_table = connection.run_table(engine)
                 run_lane = connection.run_per_lane_table(engine)
                 sample_sequencer = connection.sample_sequencer_table(engine)
-
-                seq_ID = 0
-                seq_db = get.sequencer()
-
-                if sequencer in seq_db:
-                    seq_ID = seq_db[sequencer]
-                else:
-                    try:
-                        insert_seq = sequencer_table.insert().values(Name=sequencer)
-                        con_seq = conn.execute(insert_seq)
-                        seq_ID = con_seq.inserted_primary_key
-
-                    except Warning, w:
-                        print(w)
-                        query = select([sequencer.c.Seq_ID]).\
-                            order_by(sequencer.c.Seq_ID.desc()).limit(1)
-                        res = conn.execute(query).fetchall()
-                        seq_id = res[0][0]
-
-                        delete = sequencer.delete().where(sequencer.c.Seq_ID == seq_id)
-                        conn.execute(delete)
-                        sys.stdout.write('Data deleted from database \n')
-                        sys.exit()
 
                 try:
                     insert_run = run_table.insert().values(
                         Run=str(run), Cluster_Raw=run_dict['Cluster_Raw'],
                         Cluster_PF=run_dict['Cluster_PF'],
-                        Yield_Mbases=run_dict['Yield_Mbases'], Seq_ID=seq_ID,
+                        Yield_Mbases=run_dict['Yield_Mbases'],
                         Date=run_dict['Date'], asDate=run_dict['asDate'],
                         Sequencer=sequencer
                         )
