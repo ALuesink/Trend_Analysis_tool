@@ -14,6 +14,7 @@ def up_to_database(path):
         warnings.simplefilter("always")
         warnings.filterwarnings("error")
         try:
+            path = path.strip().rstrip('/')
             run = path.split("/")[-1]
             sequencer = path.split("/")[-2]
             run = set_run.set_run_name(run)

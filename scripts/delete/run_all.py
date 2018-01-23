@@ -10,6 +10,7 @@ def del_all_rundata(path):
     with warnings.catch_warnings():
         warnings.simplefilter('error')
         try:
+            path = path.strip().rstrip('/')
             run = path.split('/')[-1]
             run = set_run.set_run_name(run)
 

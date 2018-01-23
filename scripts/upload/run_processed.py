@@ -13,6 +13,7 @@ def up_to_database(path):
         warnings.simplefilter("always")
         warnings.filterwarnings("error")
         try:
+            path = path.strip().rstrip('/')
             run = path.split("/")[-1]
             run_core = set_run.set_run_name(run)
             runs_processed_db = get.runs_processed()
