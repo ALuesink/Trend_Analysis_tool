@@ -8,7 +8,11 @@ import scripts.delete
 # Upload functions
 def upload_raw_data(args):
     """Upload raw run data to the database"""
-    scripts.upload.raw_data.up_to_database(args.path)
+    if args.overwrite:
+        scripts.delete.run_all.del_all_rundata(args.path)
+        scripts.upload.raw_data.up_to_database(args.path)
+    else:
+        scripts.upload.raw_data.up_to_database(args.path)
 
 
 def upload_processed_data(args):
@@ -19,14 +23,6 @@ def upload_processed_data(args):
 def upload_sample_processed(args):
     """Upload processed sample data to the database"""
     scripts.upload.sample_processed.up_to_database(args.path, args.samples)
-
-
-def update_raw_data(args):
-    """Update raw data to the database,
-    if run is in database the run will be delete and new data uploaded
-    """
-    scripts.delete.run_all.del_all_rundata(args.path)
-    scripts.upload.raw_data.up_to_database(args.path)
 
 
 # Delete frunctions
@@ -79,13 +75,9 @@ if __name__ == '__main__':
     subparser_upload = parser_upload.add_subparsers()
 
     parser_upload_raw = subparser_upload.add_parser('raw_data', help='upload raw data to database')
+    parser_upload_raw.add_argument('--overwrite', help='overwrite data in the database')
     parser_upload_raw.add_argument('path', help='Path to run')
     parser_upload_raw.set_defaults(func=upload_raw_data)
-
-    subparser_upload_raw = parser_upload_raw.add_subparsers()
-    parser_update_raw = parser_upload_raw.add_parser('--overwrite', help='overwrite data into the database')
-    parser_update_raw.add_argument('path', help='Path to run')
-    parser_update_raw.set_defaults(func=update_raw_data)
 
     parser_upload_processed = subparser_upload.add_parser('processed_data', help='upload processed data to database')
     parser_upload_processed.add_argument('path', help='Path to run')
