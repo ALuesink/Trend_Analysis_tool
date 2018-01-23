@@ -91,7 +91,7 @@ if __name__ == '__main__':
     parser_upload_processed.set_defaults(func=upload_processed_data)
 
     parser_upload_samples_proc = subparser_upload.add_parser('sample_processed', help='upload processed sample data to database')
-    parser_upload_samples_proc.add_argument('run', help='Run name')
+    parser_upload_samples_proc.add_argument('path', help='Path to run')
     parser_upload_samples_proc.add_argument('samples', default=[], nargs='+', help='Sample names')
     parser_upload_samples_proc.set_defaults(func=upload_sample_processed)
 
@@ -100,20 +100,20 @@ if __name__ == '__main__':
     subparser_delete = parser_delete.add_subparsers()
 
     parser_delete_run_all = subparser_delete.add_parser('run_all', help='delete run data from all tables in database')
-    parser_delete_run_all.add_argument('run', help='Path to run')
+    parser_delete_run_all.add_argument('path', help='Path to run')
     parser_delete_run_all.set_defaults(func=delete_run_all_data)
 
     parser_delete_raw_run = subparser_delete.add_parser('raw_run', help='delete raw run data from the database')
-    parser_delete_raw_run.add_argument('run', help='Path to run')
+    parser_delete_raw_run.add_argument('path', help='Path to run')
     parser_delete_raw_run.set_defaults(func=delete_run_raw_data)
 
     parser_delete_sample_proc = subparser_delete.add_parser('sample_proc', help='delete processed sample data from the database')
-    parser_delete_sample_proc.add_argument('run', help='Path to run')
+    parser_delete_sample_proc.add_argument('path', help='Path to run')
     parser_delete_sample_proc.add_argument('samples', default=[], nargs='+', help='Sample names')
     parser_delete_sample_proc.set_defaults(func=delete_sample_proc_data)
 
     parser_delete_run_proc = subparser_delete.add_parser('run_proc', help='delete processed run data from the database')
-    parser_delete_run_proc.add_argument('run', help='Path to run')
+    parser_delete_run_proc.add_argument('path', help='Path to run')
     parser_delete_run_proc.set_defaults(func=delete_run_proc_data)
 
     # update data
