@@ -82,6 +82,7 @@ if __name__ == '__main__':
     parser_upload_raw.add_argument('path', help='Path to run')
     parser_upload_raw.set_defaults(func=upload_raw_data)
 
+    subparser_upload_raw = parser_upload_raw.add_subparsers()
     parser_update_raw = parser_upload_raw.add_parser('--overwrite', help='overwrite data into the database')
     parser_update_raw.add_argument('path', help='Path to run')
     parser_update_raw.set_defaults(func=update_raw_data)
