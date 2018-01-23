@@ -123,8 +123,8 @@ if __name__ == '__main__':
     parser_update_run.add_argument('path_proc', help='Path to processed run')
     parser_update_run.set_defaults(func=update_run_data)
 
-    parser_update_proc_run = subparser_update.add_parse('proc_run', help='delete and update processed run data')
-    parser_update_proc_run.add_argmuent('path', help='Path to processed run')
+    parser_update_proc_run = subparser_update.add_parser('proc_run', help='delete and update processed run data')
+    parser_update_proc_run.add_argument('path', help='Path to processed run')
     parser_update_proc_run.set_defaults(func=update_proc_run_data)
 
     args = parser.parse_args()
