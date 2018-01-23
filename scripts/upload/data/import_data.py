@@ -38,9 +38,8 @@ def laneHTML(run, path):
         d = datetime.strptime(date, '%Y-%m-%d')
         as_date = (d-epoch).days
 
-        lanehtml = commands.getoutput('find {path}/{run}/Data/Intensities/BaseCalls/Reports/html/*/all/all/all/ -iname \'lane.html\''.format(
-            path=str(path),
-            run=str(run)
+        lanehtml = commands.getoutput('find {path}/Data/Intensities/BaseCalls/Reports/html/*/all/all/all/ -iname \'lane.html\''.format(
+            path=str(path)
             ))
 
         with open(lanehtml, 'r') as lane:
@@ -104,9 +103,8 @@ def laneBarcodeHTML(run, path):
             'Mean_Quality_Score': {'column': 'Mean Quality Score'}
         }
 
-        samplehtml = commands.getoutput('find {path}/{run}/Data/Intensities/BaseCalls/Reports/html/*/all/all/all/ -iname \'laneBarcode.html\''.format(
-            path=str(path),
-            run=str(run)
+        samplehtml = commands.getoutput('find {path}/Data/Intensities/BaseCalls/Reports/html/*/all/all/all/ -iname \'laneBarcode.html\''.format(
+            path=str(path)
             ))
 
         with open(samplehtml, 'r') as sample:
@@ -147,9 +145,8 @@ def vcf_file(run, path):
     """
     try:
         dic_samples = {}
-        file_vcf = commands.getoutput('find {path}/{run}/ -maxdepth 1 -iname \'*.filtered_variants.vcf\''.format(
-            path=str(path),
-            run=str(run)
+        file_vcf = commands.getoutput('find {path}/ -maxdepth 1 -iname \'*.filtered_variants.vcf\''.format(
+            path=str(path)
             ))
         with open(file_vcf, 'r') as vcffile:
             vcf_file = vcf.Reader(vcffile)
@@ -195,9 +192,8 @@ def runstat_file(run, path):
     """
     try:
         sample_dup = {}
-        runstats_file = commands.getoutput('find {path}/{run}/ -iname \'run_stats.txt\''.format(
-            path=str(path),
-            run=str(run)
+        runstats_file = commands.getoutput('find {path}/ -iname \'run_stats.txt\''.format(
+            path=str(path)
             ))
 
         with open(runstats_file, 'r') as runstats:
@@ -231,9 +227,8 @@ def HSMetrics(run, path):
     """
     try:
         sample_stats = {}
-        QCStats_file = commands.getoutput('find {path}/{run}/QCStats/ -iname \'HSMetrics_summary.transposed.txt\''.format(
-            path=str(path),
-            run=str(run)
+        QCStats_file = commands.getoutput('find {path}/QCStats/ -iname \'HSMetrics_summary.transposed.txt\''.format(
+            path=str(path)
             ))
 
         dict_columns = {
