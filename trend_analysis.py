@@ -1,7 +1,6 @@
 """Trend Analysis tool"""
 
 import argparse
-import config
 import scripts.upload
 import scripts.delete
 
@@ -9,17 +8,25 @@ import scripts.delete
 # Upload functions
 def upload_raw_data(args):
     """Upload raw run data to the database"""
-    scripts.upload.raw_data.up_to_database(args.run, args.path, args.sequencer)
+    scripts.upload.raw_data.up_to_database(args.path)
 
 
 def upload_processed_data(args):
     """Upload processed run data to the database"""
-    scripts.upload.run_processed.up_to_database(args.run, args.path)
+    scripts.upload.run_processed.up_to_database(args.path)
 
 
 def upload_sample_processed(args):
     """Upload processed sample data to the database"""
-    scripts.upload.sample_processed.up_to_database(args.run, args.path, args.samples)
+    scripts.upload.sample_processed.up_to_database(args.path, args.samples)
+
+
+def update_raw_data(args):
+    """Update raw data to the database,
+    if run is in database the run will be delete and new data uploaded
+    """
+    scripts.delete.run_rawdata.del_run_rawdata(args.path)
+    scripts.upload.raw_data.up_to_database(args.path)
 
 
 # Delete frunctions
@@ -46,21 +53,21 @@ def delete_run_proc_data(args):
 # Delete + upload functions
 def update_run_data(args):
     """Delete and then upload all run data"""
-    scripts.delete.run_all.del_all_rundata(args.run)
-    scripts.upload.raw_data.up_to_database(args.run, args.path_raw, args.sequencer)
-    scripts.upload.run_processed.up_to_database(args.run, args.path_proc)
+    scripts.delete.run_all.del_all_rundata(args.path_raw)
+    scripts.upload.raw_data.up_to_database(args.path_raw)
+    scripts.upload.run_processed.up_to_database(args.path_proc)
 
 
 def update_proc_run_data(args):
     """Delete and then upload processed run data"""
-    scripts.delete.run_processed.del_runprocessed(args.run)
-    scripts.upload.run_processed.up_to_database(args.run, args.path)
+    scripts.delete.run_processed.del_runprocessed(args.path)
+    scripts.upload.run_processed.up_to_database(args.path)
 
 
 def update_sample_proc_data(args):
     """Delete and then upload processed sample data"""
-    scripts.delete.sample_processed.del_sampledata(args.run, args.samples)
-    scripts.upload.sample_processed.up_to_database(args.run, args.path, args.samples)
+    scripts.delete.sample_processed.del_sampledata(args.path, args.samples)
+    scripts.upload.sample_processed.up_to_database(args.path, args.samples)
 
 
 if __name__ == '__main__':
@@ -72,19 +79,19 @@ if __name__ == '__main__':
     subparser_upload = parser_upload.add_subparsers()
 
     parser_upload_raw = subparser_upload.add_parser('raw_data', help='upload raw data to database')
-    parser_upload_raw.add_argument('run', help='Run name')
     parser_upload_raw.add_argument('path', help='Path to run')
-    parser_upload_raw.add_argument('sequencer', choices=config.Sequencers, help='Sequencer name')
     parser_upload_raw.set_defaults(func=upload_raw_data)
 
+    parser_update_raw = parser_upload_raw.add_parser('--overwrite', help='overwrite data into the database')
+    parser_update_raw.add_argument('path', help='Path to run')
+    parser_update_raw.set_defaults(func=update_raw_data)
+
     parser_upload_processed = subparser_upload.add_parser('processed_data', help='upload processed data to database')
-    parser_upload_processed.add_argument('run', help='Run name')
     parser_upload_processed.add_argument('path', help='Path to run')
     parser_upload_processed.set_defaults(func=upload_processed_data)
 
     parser_upload_samples_proc = subparser_upload.add_parser('sample_processed', help='upload processed sample data to database')
     parser_upload_samples_proc.add_argument('run', help='Run name')
-    parser_upload_samples_proc.add_argument('path', help='Path to run')
     parser_upload_samples_proc.add_argument('samples', default=[], nargs='+', help='Sample names')
     parser_upload_samples_proc.set_defaults(func=upload_sample_processed)
 
@@ -114,17 +121,18 @@ if __name__ == '__main__':
     subparser_update = parser_update.add_subparsers()
 
     parser_update_sample_proc = subparser_update.add_parser('sample', help='delete and update processed sample data')
-    parser_update_sample_proc.add_argument('run', help='Run name')
     parser_update_sample_proc.add_argument('path', help='Path to run')
     parser_update_sample_proc.add_argument('samples', default=[], nargs='+', help='Sample names')
     parser_update_sample_proc.set_defaults(func=update_sample_proc_data)
 
     parser_update_run = subparser_update.add_parser('run_all', help='delete and update all run data')
-    parser_update_run.add_argument('run', help='Run name')
     parser_update_run.add_argument('path_raw', help='Path to raw run')
     parser_update_run.add_argument('path_proc', help='Path to processed run')
-    parser_update_run.add_argument('sequencer', choices=config.Sequencers, help='Sequencer name')
     parser_update_run.set_defaults(func=update_run_data)
+
+    parser_update_proc_run = subparser_update.add_parse('proc_run', help='delete and update processed run data')
+    parser_update_proc_run.add_argmuent('path', help='Path to processed run')
+    parser_update_proc_run.set_defaults(func=update_proc_run_data)
 
     args = parser.parse_args()
     args.func(args)

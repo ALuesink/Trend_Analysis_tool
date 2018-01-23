@@ -8,12 +8,14 @@ import sys
 import data
 
 
-def up_to_database(run, path, sequencer):
+def up_to_database(path):
     """Get data of inserted run and upload the data to the database"""
     with warnings.catch_warnings():
         warnings.simplefilter("always")
         warnings.filterwarnings("error")
         try:
+            run = path.split("/")[-1]
+            sequencer = path.split("/")[-2]
             run = set_run.set_run_name(run)
             runs_db = get.runs()
 

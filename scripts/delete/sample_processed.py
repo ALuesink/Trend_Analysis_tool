@@ -5,11 +5,12 @@ from ..database import connection, get, set_run
 import warnings
 
 
-def del_sampledata(run, samples):
+def del_sampledata(path, samples):
     with warnings.catch_warnings():
         warnings.simplefilter('error')
 
         try:
+            run = path.split('/')[-1]
             run = set_run.set_run_name(run)
 
             engine = connection.engine()

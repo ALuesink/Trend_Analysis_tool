@@ -8,11 +8,12 @@ import sys
 import data
 
 
-def up_to_database(run, path):
+def up_to_database(path):
     with warnings.catch_warnings():
         warnings.simplefilter("always")
         warnings.filterwarnings("error")
         try:
+            run = path.split("/")[-1]
             run_core = set_run.set_run_name(run)
             runs_processed_db = get.runs_processed()
 

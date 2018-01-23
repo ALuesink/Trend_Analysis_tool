@@ -8,9 +8,10 @@ import data
 import sys
 
 
-def up_to_database(run, path, samples):
+def up_to_database(path, samples):
     with warnings.catch_warnings():
         try:
+            run = path.split("/")[-1]
             run_core = set_run.set_run_name(run)
             sample_run_db = get.sample_run_processed()
 

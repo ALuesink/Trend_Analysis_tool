@@ -23,15 +23,15 @@ When not all samples of a run need to be uploaded, these samples need to be ente
 
 Raw run data:
 ```
-python trend_analysis.py upload raw_data 'run' 'path' 'sequencer'
+python trend_analysis.py upload raw_data 'path'
 ```
 Processed run data:
 ```
-python trend_analysis.py upload processed_data 'run' 'path'
+python trend_analysis.py upload processed_data 'path'
 ```
 Processed sample data:
 ```
-python trend_analysis.py upload sample_processed 'run' 'path' 'samples'
+python trend_analysis.py upload sample_processed 'path' 'samples'
 ```
 
 ### Delete data
@@ -63,15 +63,15 @@ In order to update certain samples, the run name, the path to the processed data
 
 Delete and then upload new run data:
 ```
-python trend_analysis.py update run_all 'run' 'path_raw' 'path_proc' 'sequencer'
+python trend_analysis.py update run_all 'path_raw' 'path_proc'
 ```
 Delete and then upload processed run data:
 ```
-python trend_analysis.py update processed_data 'run'
+python trend_analysis.py update processed_data 'path'
 ```
 Delete and then upload processed sample data:
 ```
-python trend_analysis.py update sample 'run' 'path' 'samples'
+python trend_analysis.py update sample 'path' 'samples'
 ```
 
 ## Updating the tool
@@ -80,7 +80,6 @@ When a new sequencer will be used, this sequencer needs to be added to the scrip
 At the same time, when there are quality parameters added to one of the files, these new parameters also need to be added to the script.  
 
 #### New sequencer
-* config.py: add the new sequencer to the list Sequencers
 * R-script: add the new sequencer with a corresponding colour and shape
 
 #### New parameters
