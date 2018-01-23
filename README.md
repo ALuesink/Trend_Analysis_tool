@@ -40,19 +40,19 @@ When only certain samples need to be deleted, they need to be enter subsequently
 
 All run data:
 ```
-python trend_analysis.py delete run_all 'run'
+python trend_analysis.py delete run_all 'path'
 ```
 Raw run data:
 ```
-python trend_analysis.py delete raw_run 'run'
+python trend_analysis.py delete raw_run 'path'
 ```
 Processed run data:
 ```
-python trend_analysis.py delete run_proc 'run'
+python trend_analysis.py delete run_proc 'path'
 ```
 Processed sample data:
 ```
-python trend_analysis.py delete sample_proc 'run' 'samples'
+python trend_analysis.py delete sample_proc 'path' 'samples'
 ```
 
 ### Update data
