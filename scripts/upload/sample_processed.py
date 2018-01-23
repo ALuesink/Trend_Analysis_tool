@@ -26,9 +26,9 @@ def up_to_database(path, samples):
             list_samples = list(set(samples) - set(samples_db))
 
             if len(list_samples) > 0:                                           # Only the samples, in combination with their run, that aren't in the database yet
-                sample_vcf = data.import_data.vcf_file(run, path)               # dictionary: keys are sample names, values are vcf stats
-                sample_dup = data.import_data.runstat_file(run, path)           # dictionary: keys are sample names, values percentage duplication
-                dict_samples = data.import_data.HSMetrics(run, path)            # dictionary: keys are sample names, values are HSMetrics/Picard stats
+                sample_vcf = data.import_data.vcf_file(path)               # dictionary: keys are sample names, values are vcf stats
+                sample_dup = data.import_data.runstat_file(path)           # dictionary: keys are sample names, values percentage duplication
+                dict_samples = data.import_data.HSMetrics(path)            # dictionary: keys are sample names, values are HSMetrics/Picard stats
 
                 engine = connection.engine()
                 conn = engine.connect()

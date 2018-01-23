@@ -83,7 +83,7 @@ def laneHTML(run, path):
         print(e)
 
 
-def laneBarcodeHTML(run, path):
+def laneBarcodeHTML(path):
     """Retrieve data from the laneBarcode.html page, the data is per barcode/sample per lane"""
     try:
         samples_dict = {}
@@ -139,7 +139,7 @@ def laneBarcodeHTML(run, path):
         print(e)
 
 
-def vcf_file(run, path):
+def vcf_file(path):
     """Retrieve data from a vcf file, for each sample the number of variants,
     homo- and heterozygous, number of dbSNP variants and PASS variants is determained
     """
@@ -186,7 +186,7 @@ def vcf_file(run, path):
         print(e)
 
 
-def runstat_file(run, path):
+def runstat_file(path):
     """Retrieve data from the runstats file,
     for each sample the percentage duplication is retrieved
     """
@@ -221,7 +221,7 @@ def runstat_file(run, path):
         print(e)
 
 
-def HSMetrics(run, path):
+def HSMetrics(path):
     """Retrieve data from the HSMetrics_summary.transposed file,
     from this file all the data is transferred to a dictionary
     """

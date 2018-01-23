@@ -24,7 +24,7 @@ def up_to_database(path):
                 sys.stdout.write('This run is already in the database \n')
             else:
                 run_dict, lane_dict = data.import_data.laneHTML(run, path)
-                samples_dict = data.import_data.laneBarcodeHTML(run, path)
+                samples_dict = data.import_data.laneBarcodeHTML(path)
 
                 engine = connection.engine()
                 conn = engine.connect()
