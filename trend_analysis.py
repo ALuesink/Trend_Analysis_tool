@@ -25,29 +25,29 @@ def update_raw_data(args):
     """Update raw data to the database,
     if run is in database the run will be delete and new data uploaded
     """
-    scripts.delete.run_rawdata.del_run_rawdata(args.path)
+    scripts.delete.run_all.del_all_rundata(args.path)
     scripts.upload.raw_data.up_to_database(args.path)
 
 
 # Delete frunctions
 def delete_run_all_data(args):
     """Delete run data from the whole database"""
-    scripts.delete.run_all.del_all_rundata(args.run)
+    scripts.delete.run_all.del_all_rundata(args.path)
 
 
 def delete_run_raw_data(args):
     """Delete raw run data from the database"""
-    scripts.delete.run_rawdata.del_run_rawdata(args.run)
+    scripts.delete.run_rawdata.del_run_rawdata(args.path)
 
 
 def delete_sample_proc_data(args):
     """Delete processed samples from the database"""
-    scripts.delete.sample_processed.del_sampledata(args.run, args.samples)
+    scripts.delete.sample_processed.del_sampledata(args.path, args.samples)
 
 
 def delete_run_proc_data(args):
     """Delete processed run data"""
-    scripts.delete.run_processed.del_runprocessed(args.run)
+    scripts.delete.run_processed.del_runprocessed(args.path)
 
 
 # Delete + upload functions
@@ -100,20 +100,20 @@ if __name__ == '__main__':
     subparser_delete = parser_delete.add_subparsers()
 
     parser_delete_run_all = subparser_delete.add_parser('run_all', help='delete run data from all tables in database')
-    parser_delete_run_all.add_argument('run', help='Run name')
+    parser_delete_run_all.add_argument('run', help='Path to run')
     parser_delete_run_all.set_defaults(func=delete_run_all_data)
 
     parser_delete_raw_run = subparser_delete.add_parser('raw_run', help='delete raw run data from the database')
-    parser_delete_raw_run.add_argument('run', help='Run name')
+    parser_delete_raw_run.add_argument('run', help='Path to run')
     parser_delete_raw_run.set_defaults(func=delete_run_raw_data)
 
     parser_delete_sample_proc = subparser_delete.add_parser('sample_proc', help='delete processed sample data from the database')
-    parser_delete_sample_proc.add_argument('run', help='Run name')
+    parser_delete_sample_proc.add_argument('run', help='Path to run')
     parser_delete_sample_proc.add_argument('samples', default=[], nargs='+', help='Sample names')
     parser_delete_sample_proc.set_defaults(func=delete_sample_proc_data)
 
     parser_delete_run_proc = subparser_delete.add_parser('run_proc', help='delete processed run data from the database')
-    parser_delete_run_proc.add_argument('run', help='Run name')
+    parser_delete_run_proc.add_argument('run', help='Path to run')
     parser_delete_run_proc.set_defaults(func=delete_run_proc_data)
 
     # update data
