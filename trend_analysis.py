@@ -75,7 +75,7 @@ if __name__ == '__main__':
     subparser_upload = parser_upload.add_subparsers()
 
     parser_upload_raw = subparser_upload.add_parser('raw_data', help='upload raw data to database')
-    parser_upload_raw.add_argument('--overwrite', help='overwrite data in the database')
+    parser_upload_raw.add_argument('--overwrite', help='overwrite data in the database', action='store_true')
     parser_upload_raw.add_argument('path', help='Path to run')
     parser_upload_raw.set_defaults(func=upload_raw_data)
 
